@@ -6,29 +6,30 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProductCategory extends Model
+class Payment extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
     /**
-     * Get the product that owns the ProductCategory
+     * Get the order that owns the Payment
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function product(): BelongsTo
+    public function order(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Order::class);
     }
 
     /**
-     * Get the category that owns the ProductCategory
+     * Get the payment_method that owns the Payment
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function category(): BelongsTo
+    public function payment_method(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(PaymentMethod::class);
     }
+
 }

@@ -13,15 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('order_status_histories', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->foreignId('user_id');
-            $table->foreignId('order_status_id');
+            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('current_status');
+            $table->unsignedBigInteger('previous_status')->nullable();
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('order_status_id')->references('id')->on('order_statuses');
         });
     }
 
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('order_status_histories');
     }
 };

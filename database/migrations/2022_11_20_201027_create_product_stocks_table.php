@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status', ['in', 'out', 'return'])->default('in');
             $table->text('description')->nullable();
             $table->string('from')->default('internal');
+            $table->unsignedBigInteger('created_by');
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products');
