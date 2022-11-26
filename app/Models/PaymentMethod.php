@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
-class Activity extends Model
+class PaymentMethod extends Model
 {
     use HasFactory;
 
@@ -19,19 +19,19 @@ class Activity extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->user_id = Auth::id();
+            $model->slug = Str::slug($model->name);
         });
     }
 
     protected $guarded = [];
 
     /**
-     * Get the user that owns the Activity
+     * Get all of the payments for the PaymentMethod
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function user()
+    public function payments()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Payment::class);
     }
 }

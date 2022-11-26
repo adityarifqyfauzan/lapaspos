@@ -20,6 +20,7 @@ return new class extends Migration
             $table->double('margin');
             $table->double('final_price');
             $table->boolean('is_active')->default(true);
+            $table->unsignedBigInteger('created_by');
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products');
