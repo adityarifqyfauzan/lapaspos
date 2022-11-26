@@ -14,13 +14,14 @@ class Role extends Model
      *
      * @return void
      */
-    protected static function booted()
+    protected static function boot()
     {
-        static::created(function ($model) {
+        parent::boot();
+        static::creating(function ($model) {
             $model->slug = Str::slug($model->name);
         });
 
-        static::updated(function ($model) {
+        static::updating(function ($model) {
             $model->slug = Str::slug($model->name);
         });
     }

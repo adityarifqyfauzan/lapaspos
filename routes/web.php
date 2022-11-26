@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +17,35 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->to('/telescope');
+    }
     return view('welcome');
 });
+
+Route::post('/login', function (Request $request){
+
+    $validate = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
+
+    if ($validate->fails()) {
+        return redirect()->to('/');
+    }
+
+    if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+        return redirect()->to('/telescope');
+    }
+
+    return redirect()->to('/');
+
+})->name('login');
+
+Route::get('/logout', function(){
+    if (!Auth::check()) {
+        return redirect()->to('/');
+    }
+    Auth::logout();
+    return redirect()->to('/');
+})->name('logout');
