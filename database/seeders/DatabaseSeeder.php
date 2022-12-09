@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,5 +23,10 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
+        if (App::environment(['local', 'staging'])) {
+            $this->call(CategorySeeder::class);
+            $this->call(ProductSeeder::class);
+            $this->call(ProductPriceSeeder::class);
+        }
     }
 }

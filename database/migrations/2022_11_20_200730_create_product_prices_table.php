@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('product_prices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id');
+            $table->foreignId('product_id')->index();
             $table->double('base_price');
             $table->double('margin');
             $table->double('final_price');

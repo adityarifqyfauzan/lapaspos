@@ -17,11 +17,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id');
             $table->foreignId('payment_method_id');
+            $table->foreignId('payment_status_id');
+            $table->string("invoice");
             $table->double('amount');
-            $table->double('final_amount');
             $table->timestamps();
 
             $table->foreign('payment_method_id')->references('id')->on('payment_methods');
+            $table->foreign('payment_status_id')->references('id')->on('payment_statuses');
             $table->foreign('order_id')->references('id')->on('orders');
         });
     }
