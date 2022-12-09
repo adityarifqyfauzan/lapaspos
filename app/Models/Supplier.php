@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
-class Role extends Model
+
+class Supplier extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
 
     /**
      * The "boot" method of the model.
@@ -26,16 +30,13 @@ class Role extends Model
         });
     }
 
-    protected $guarded = [];
-
     /**
-     * Get all of the users for the Role
+     * Get all of the product_stocks for the Supplier
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function users()
+    public function product_stocks(): HasMany
     {
-        return $this->hasMany(User::class, 'role_id', 'id');
+        return $this->hasMany(ProductStock::class);
     }
-
 }

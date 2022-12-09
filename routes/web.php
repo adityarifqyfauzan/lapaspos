@@ -23,6 +23,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/ping', function () {
+    return json_encode([
+        "message" => "pong"
+    ], 200);
+});
+
 Route::post('/login', function (Request $request){
 
     $validate = Validator::make($request->all(), [

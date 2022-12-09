@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('payment_status_histories', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->index();
-            $table->string('slug')->unique();
-            $table->boolean('is_active')->default(true);
+            $table->unsignedBigInteger('payment_id');
+            $table->unsignedBigInteger('current_status');
+            $table->unsignedBigInteger('previous_status')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('payment_status_histories');
     }
 };

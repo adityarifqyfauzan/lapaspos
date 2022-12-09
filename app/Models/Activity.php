@@ -19,7 +19,7 @@ class Activity extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->user_id = Auth::id();
+            $model->user_id = (env('DEBUGGING_MODE', false)) ? 1 : Auth::id();
         });
     }
 
