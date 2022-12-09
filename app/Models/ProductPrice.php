@@ -16,11 +16,12 @@ class ProductPrice extends Model
      *
      * @return void
      */
-    protected static function booted()
+    protected static function boot()
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->created_by = Auth::id();
+            $model->created_by = (env('DEBUGGING_MODE', false)) ? 1 : Auth::id();
+            $model->final_price = $model->base_price + $model->margin;
         });
     }
 

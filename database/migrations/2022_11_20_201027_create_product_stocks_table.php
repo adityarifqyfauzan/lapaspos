@@ -16,14 +16,15 @@ return new class extends Migration
         Schema::create('product_stocks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id');
+            $table->foreignId('supplier_id');
             $table->integer('stock');
-            $table->enum('status', ['in', 'out', 'return'])->default('in');
+            $table->enum('status', ['in', 'out', 'sale', 'return', 'opname'])->default('in');
             $table->text('description')->nullable();
-            $table->string('from')->default('internal');
             $table->unsignedBigInteger('created_by');
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('supplier_id')->references('id')->on('suppliers');
         });
     }
 

@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('product_code')->unique();
             $table->string('barcode')->nullable();
-            $table->string('name');
+            $table->string('name')->index();
             $table->string('slug')->unique();
+            $table->string('item_unit')->default('box');
             $table->text('description')->nullable();
             $table->boolean('have_stock')->default(false);
             $table->boolean('is_active')->default(true);

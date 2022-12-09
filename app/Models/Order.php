@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Helper\Generator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Auth;
 
 class Order extends Model
@@ -21,7 +22,7 @@ class Order extends Model
         parent::boot();
         static::creating(function ($model) {
             $model->code = Generator::virtualProductCode();
-            $model->user_id = Auth::id();
+            $model->user_id = (env('DEBUGGING_MODE', false)) ? 1 : Auth::id();
         });
     }
 
@@ -65,5 +66,15 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * The products that belong to the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'order_details', 'product_id', 'order_id');
     }
 }

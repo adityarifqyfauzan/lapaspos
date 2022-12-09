@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -21,7 +22,7 @@ trait ResponseFormatter
      *
      * @return Json
      */
-    public function success($message, $data = [], $code = Response::HTTP_OK, $paginate = [])
+    public function success($message, $data = null, $code = Response::HTTP_OK, $paginate = [])
     {
 
         if ($paginate) {
@@ -71,4 +72,17 @@ trait ResponseFormatter
         ];
     }
 
+    /**
+     * Untuk melakukan filter error sesuai dengan environment
+     * @param string $message
+     * @return string
+     */
+    public function error($message)
+    {
+        if (App::environment(['staging', 'local'])) {
+            return $message;
+        }
+
+        return 'Terjadi kesalahan pada server, silahkan hubungi administrator';
+    }
 }
