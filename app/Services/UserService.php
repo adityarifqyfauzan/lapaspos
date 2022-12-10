@@ -26,7 +26,7 @@ class UserService extends Service implements UserRepository
 
     public function findOneBy($criteria = []){
 
-        $user = User::with('role', 'activities', 'login_histories')->where(Arr::except($criteria, ["name"]));
+        $user = User::with('role:id,name,slug')->where(Arr::except($criteria, ["name"]));
 
         if (Arr::exists($criteria, "name")) {
             $user = $user->where("name", "like", "%". $criteria["name"] . "%");
