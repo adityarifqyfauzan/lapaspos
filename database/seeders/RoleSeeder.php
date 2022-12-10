@@ -20,7 +20,7 @@ class RoleSeeder extends Seeder
                 'name' => 'Super Admin',
             ],
             [
-                'name' => 'Manajer'
+                'name' => 'Admin'
             ],
             [
                 'name' => 'Kasir'
