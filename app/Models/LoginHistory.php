@@ -10,18 +10,7 @@ class LoginHistory extends Model
 {
     use HasFactory;
 
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->user_id = (env('DEBUGGING_MODE', false)) ? 1 : Auth::id();
-        });
-    }
+    protected $guarded = [];
 
     /**
      * Get the user that owns the LoginHistory

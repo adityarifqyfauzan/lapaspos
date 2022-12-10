@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -15,25 +16,27 @@ trait ResponseFormatter
      * this function used when you want to create success
      * response
      *
-     * @param String $message
-     * @param Array $data (optional)
-     * @param Symfony\Component\HttpFoundation\Response $code
-     * @param Array $paginate (optional)
+     * @param string $message
+     * @param mixed $data
+     * @param int $code
+     * @param array $paginate
      *
-     * @return Json
+     * @return json
      */
     public function success($message, $data = null, $code = Response::HTTP_OK, $paginate = [])
     {
 
+        // Log::info($message . " " . now(), isset($data) == null ? ['context' => $data] : []);
+
         if ($paginate) {
-            return json_encode([
+            return response()->json([
                 "message" => $message,
                 "data" => $data,
                 "paginate" => $paginate
             ], $code);
         }
 
-        return json_encode([
+        return response()->json([
             "message" => $message,
             "data" => $data
         ], $code);
@@ -43,13 +46,15 @@ trait ResponseFormatter
     /**
      * Http failed response
      *
-     * @param String $message
-     * @param Symfony\Component\HttpFoundation\Response $code
-     * @return Json
+     * @param string $message
+     * @param int $code
+     * @return json
      */
     public function failed($message, $code = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
-        return json_encode([
+        Log::alert($message . "[" . $code . "]" . " | " . now());
+
+        return response()->json([
             "message" => $message
         ], $code);
     }
@@ -79,6 +84,9 @@ trait ResponseFormatter
      */
     public function error($message)
     {
+
+        Log::critical($message . ' ' . now());
+
         if (App::environment(['staging', 'local'])) {
             return $message;
         }
