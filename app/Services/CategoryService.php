@@ -20,7 +20,10 @@ class CategoryService extends Service implements CategoryRepository
     public function findOneBy($criteria = []) {
 
         $category = Category::where($criteria)->first();
-        return $this->serviceReturn(true, $category);
+        if ($category) {
+            return $this->serviceReturn(true, $category);
+        }
+        return $this->serviceReturn(false);
 
     }
 

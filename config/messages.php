@@ -10,6 +10,9 @@ return [
         'found'     => 'Data ditemukan!',
         'error'     => 'Terjadi kesalahaan!',
         'unauthorized' => 'Unauthorized',
+        'created'   => 'Data berhasil ditambahkan!',
+        'updated'   => 'Data berhasil diperbarui!',
+        'deleted'   => 'Data berhasil dihapus',
     ],
     'auth' => [
         'login' => [
@@ -20,5 +23,5 @@ return [
         'logout' => [
             'success' => 'Logout berhasil!',
         ]
-    ]
+    ],
 ];
