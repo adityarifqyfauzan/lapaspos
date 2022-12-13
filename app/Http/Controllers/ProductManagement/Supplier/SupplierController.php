@@ -1,23 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\ProductManagement\Category;
+namespace App\Http\Controllers\ProductManagement\Supplier;
 
-use App\Http\Context\Category\CategoryContextInterface;
+use App\Http\Context\Supplier\SupplierContextInterface;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
-class CategoryController extends Controller
+class SupplierController extends Controller
 {
 
-    protected CategoryContextInterface $category_context;
+    protected SupplierContextInterface $context;
 
-    function __construct(CategoryContextInterface $category_context)
+    function __construct(SupplierContextInterface $context)
     {
-        $this->category_context = $category_context;
+        $this->context = $context;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -27,7 +28,7 @@ class CategoryController extends Controller
     {
         try {
 
-            $resp = $this->category_context->getBy($request);
+            $resp = $this->context->getBy($request);
             return $this->success($resp->message, $resp->data, $resp->http_status, $resp->pagination);
 
         } catch (Exception $e) {
@@ -63,7 +64,7 @@ class CategoryController extends Controller
                 return $this->failed($validate->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
 
-            $resp = $this->category_context->store($request);
+            $resp = $this->context->store($request);
 
             return $this->success($resp->message, $resp->data, $resp->http_status);
 
@@ -82,7 +83,7 @@ class CategoryController extends Controller
     {
         try {
 
-            $resp = $this->category_context->getById($id);
+            $resp = $this->context->getById($id);
 
             return $this->success($resp->message, $resp->data, $resp->http_status);
 
@@ -121,7 +122,7 @@ class CategoryController extends Controller
                 return $this->failed($validate->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
 
-            $resp = $this->category_context->update($id, $request);
+            $resp = $this->context->update($id, $request);
 
             return $this->success($resp->message, $resp->data, $resp->http_status);
 
@@ -139,24 +140,5 @@ class CategoryController extends Controller
     public function destroy($id)
     {
 
-    }
-
-    /**
-     * Update status by id
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function updateStatus($id)
-    {
-        try {
-
-            $resp = $this->category_context->updateStatus($id);
-
-            return $this->success($resp->message, $resp->data, $resp->http_status);
-
-        } catch (Exception $e) {
-            return $this->failed($this->error($e->getMessage()));
-        }
     }
 }

@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Context\ItemUnit;
+namespace App\Http\Context\Supplier;
 
 use App\Http\Context\Context;
-use App\Models\ItemUnit;
-use App\Repository\ItemUnitRepository;
+use App\Models\Supplier;
+use App\Repository\SupplierRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
-class ItemUnitContext extends Context implements ItemUnitContextInterface
+class SupplierContext extends Context implements SupplierContextInterface
 {
 
-    protected $service;
+    protected SupplierRepository $service;
 
-    function __construct(ItemUnitRepository $service)
+    function __construct(SupplierRepository $service)
     {
         $this->service = $service;
     }
@@ -43,56 +43,57 @@ class ItemUnitContext extends Context implements ItemUnitContextInterface
 
     public function store(Request $request) {
 
-        $item_unit = $this->service->findOneBy(['slug' => Str::slug($request->name)]);
+        $supplier = $this->service->findOneBy(['slug' => Str::slug($request->name)]);
 
-        if ($item_unit) {
-            return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, 'Satuan sudah ada!');
+        if ($supplier) {
+            return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, 'Supplier sudah ada!');
         }
 
-        $resp = $this->service->create(new ItemUnit($request->all()));
+        $resp = $this->service->create(new Supplier($request->all()));
 
         if ($resp->process) {
             return $this->returnContext(Response::HTTP_CREATED, config('messages.general.created'));
         }
 
-        return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', gagal membuat satuan');
+        return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', gagal membuat supplier');
 
     }
 
     public function update($id, Request $request) {
 
         /**
-         * cari Satuan yang mau diupdate
+         * cari Supplier yang mau diupdate
          */
-        $item_unit = $this->service->findOneBy(["id" => $id]);
+        $supplier = $this->service->findOneBy(["id" => $id]);
 
         /**
-         * cek apakah Satuan tersebut ada atau tidak
+         * cek apakah Supplier tersebut ada atau tidak
          */
-        if ($item_unit) {
+        if ($supplier) {
 
             /**
-             * bagian ini digunakan untuk cek apakah nama Satuan yang baru
+             * bagian ini digunakan untuk cek apakah nama Supplier yang baru
              * sebelumnya sudah dipakai oleh data lain
              */
             $check = $this->service->findOneBy(['slug' => Str::slug($request->name)]);
 
-            if ($check && $check->id != $item_unit->id) {
-                return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, 'Satuan sudah ada!');
+            if ($check && $check->id != $supplier->id) {
+                return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, 'Supplier sudah ada!');
             }
 
             /**
-             * jika Satuan belum tersedia, maka update
+             * jika Supplier belum tersedia, maka update
              */
-            $item_unit->name = $request->name;
+            $supplier->name = $request->name;
+            $supplier->description = $request->description;
 
-            $update = $this->service->update($item_unit);
+            $update = $this->service->update($supplier);
 
             if ($update->process) {
                 return $this->returnContext(Response::HTTP_OK, config('messages.general.updated'));
             }
 
-            return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', gagal memperbarui satuan');
+            return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', gagal memperbarui Supplier');
         }
 
         return $this->returnContext(Response::HTTP_NOT_FOUND, config('messages.general.not_found'));
@@ -100,19 +101,19 @@ class ItemUnitContext extends Context implements ItemUnitContextInterface
     }
 
     public function updateStatus($id) {
-        $item_unit = $this->service->findOneBy(["id" => $id]);
+        $supplier = $this->service->findOneBy(["id" => $id]);
 
-        if ($item_unit) {
+        if ($supplier) {
 
-            $item_unit->is_active = ($item_unit->is_active) ? false : true;
+            $supplier->is_active = ($supplier->is_active) ? false : true;
 
-            $update = $this->service->update($item_unit);
+            $update = $this->service->update($supplier);
 
             if ($update->process) {
                 return $this->returnContext(Response::HTTP_OK, config('messages.general.updated'));
             }
 
-            return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', gagal memperbarui satuan');
+            return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', gagal memperbarui supplier');
 
         }
 
