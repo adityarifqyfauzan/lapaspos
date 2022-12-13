@@ -23,10 +23,10 @@ class DatabaseSeeder extends Seeder
         // ]);
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
-        if (App::environment(['local', 'staging'])) {
-            $this->call(CategorySeeder::class);
-            $this->call(ProductSeeder::class);
-            $this->call(ProductPriceSeeder::class);
-        }
+        $this->call(CategorySeeder::class);
+        // if (App::environment(['local', 'staging'])) {
+        //     $this->call(ProductSeeder::class);
+        //     $this->call(ProductPriceSeeder::class);
+        // }
     }
 }

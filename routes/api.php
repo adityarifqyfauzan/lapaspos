@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HelloWorldController;
 use App\Http\Controllers\ProductManagement\Category\CategoryController;
+use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitController;
 use App\Jobs\TestJob;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -36,6 +37,14 @@ Route::middleware(['auth:api'])->group(function () {
                 Route::post('/', [CategoryController::class, 'store']);
                 Route::put('/{id}', [CategoryController::class, 'update']);
                 Route::put('/status/{id}', [CategoryController::class, 'updateStatus']);
+            });
+
+            Route::prefix('item-unit')->group(function () {
+                Route::get('/', [ItemUnitController::class, 'index']);
+                Route::get('/{id}', [ItemUnitController::class, 'show']);
+                Route::post('/', [ItemUnitController::class, 'store']);
+                Route::put('/{id}', [ItemUnitController::class, 'update']);
+                Route::put('/status/{id}', [ItemUnitController::class, 'updateStatus']);
             });
 
         });
