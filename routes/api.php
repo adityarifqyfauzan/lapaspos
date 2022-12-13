@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HelloWorldController;
 use App\Http\Controllers\ProductManagement\Category\CategoryController;
 use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitController;
+use App\Http\Controllers\ProductManagement\Supplier\SupplierController;
+use App\Http\Controllers\ProductManagement\Supplier\SupplierStatusController;
 use App\Jobs\TestJob;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -46,6 +48,9 @@ Route::middleware(['auth:api'])->group(function () {
                 Route::put('/{id}', [ItemUnitController::class, 'update']);
                 Route::put('/status/{id}', [ItemUnitController::class, 'updateStatus']);
             });
+
+            Route::resource('supplier', SupplierController::class);
+            Route::put('supplier/status/{id}', SupplierStatusController::class);
 
         });
     });

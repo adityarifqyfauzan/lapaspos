@@ -59,7 +59,7 @@ class ItemUnitController extends Controller
             ]);
 
             if ($validate->fails()) {
-                return $this->failed($validate->errors->first(), Response::HTTP_BAD_REQUEST);
+                return $this->failed($validate->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
 
             $resp = $this->context->store($request);
@@ -117,7 +117,7 @@ class ItemUnitController extends Controller
             ]);
 
             if ($validate->fails()) {
-                return $this->failed($validate->errors->first(), Response::HTTP_BAD_REQUEST);
+                return $this->failed($validate->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
 
             $resp = $this->context->update($id, $request);
