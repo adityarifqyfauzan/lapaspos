@@ -15,17 +15,19 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('item_unit_id');
             $table->string('product_code')->unique();
             $table->string('barcode')->nullable();
             $table->string('name')->index();
             $table->string('slug')->unique();
-            $table->string('item_unit')->default('box');
             $table->text('description')->nullable();
             $table->boolean('have_stock')->default(false);
             $table->boolean('is_active')->default(true);
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
+
+            $table->foreign('item_unit_id')->references('id')->on('item_units');
         });
     }
 
