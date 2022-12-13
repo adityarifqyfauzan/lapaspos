@@ -60,7 +60,7 @@ class CategoryController extends Controller
             ]);
 
             if ($validate->fails()) {
-                return $this->failed($validate->errors->first(), Response::HTTP_BAD_REQUEST);
+                return $this->failed($validate->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
 
             $resp = $this->category_context->store($request);
@@ -118,7 +118,7 @@ class CategoryController extends Controller
             ]);
 
             if ($validate->fails()) {
-                return $this->failed($validate->errors->first(), Response::HTTP_BAD_REQUEST);
+                return $this->failed($validate->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
 
             $resp = $this->category_context->update($id, $request);
@@ -141,22 +141,4 @@ class CategoryController extends Controller
 
     }
 
-    /**
-     * Update status by id
-     *
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function updateStatus($id)
-    {
-        try {
-
-            $resp = $this->category_context->updateStatus($id);
-
-            return $this->success($resp->message, $resp->data, $resp->http_status);
-
-        } catch (Exception $e) {
-            return $this->failed($this->error($e->getMessage()));
-        }
-    }
 }

@@ -31,6 +31,15 @@ class Supplier extends Model
     }
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    /**
      * Get all of the product_stocks for the Supplier
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

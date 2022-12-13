@@ -1,22 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\ProductManagement\ItemUnit;
+namespace App\Http\Controllers\ProductManagement\Supplier;
 
-use App\Http\Context\ItemUnit\ItemUnitContextInterface;
+use App\Http\Context\Supplier\SupplierContextInterface;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
-class ItemUnitController extends Controller
+class SupplierController extends Controller
 {
-    protected ItemUnitContextInterface $context;
 
-    function __construct(ItemUnitContextInterface $context)
+    protected SupplierContextInterface $context;
+
+    function __construct(SupplierContextInterface $context)
     {
         $this->context = $context;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -139,5 +141,4 @@ class ItemUnitController extends Controller
     {
 
     }
-
 }
