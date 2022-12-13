@@ -3,7 +3,9 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HelloWorldController;
 use App\Http\Controllers\ProductManagement\Category\CategoryController;
+use App\Http\Controllers\ProductManagement\Category\CategoryStatusController;
 use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitController;
+use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitStatusController;
 use App\Http\Controllers\ProductManagement\Supplier\SupplierController;
 use App\Http\Controllers\ProductManagement\Supplier\SupplierStatusController;
 use App\Jobs\TestJob;
@@ -33,21 +35,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::middleware(['admin'])->group(function () {
         Route::prefix('product-management')->group(function () {
 
-            Route::prefix('category')->group(function () {
-                Route::get('/', [CategoryController::class, 'index']);
-                Route::get('/{id}', [CategoryController::class, 'show']);
-                Route::post('/', [CategoryController::class, 'store']);
-                Route::put('/{id}', [CategoryController::class, 'update']);
-                Route::put('/status/{id}', [CategoryController::class, 'updateStatus']);
-            });
+            Route::resource('category', CategoryController::class);
+            Route::put('category/status/{id}', CategoryStatusController::class);
 
-            Route::prefix('item-unit')->group(function () {
-                Route::get('/', [ItemUnitController::class, 'index']);
-                Route::get('/{id}', [ItemUnitController::class, 'show']);
-                Route::post('/', [ItemUnitController::class, 'store']);
-                Route::put('/{id}', [ItemUnitController::class, 'update']);
-                Route::put('/status/{id}', [ItemUnitController::class, 'updateStatus']);
-            });
+            Route::resource('item-unit', ItemUnitController::class);
+            Route::put('item-unit/status/{id}', ItemUnitStatusController::class);
 
             Route::resource('supplier', SupplierController::class);
             Route::put('supplier/status/{id}', SupplierStatusController::class);
