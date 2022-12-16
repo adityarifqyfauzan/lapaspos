@@ -8,6 +8,7 @@ use App\Repository\LoginHistoryRepository;
 use App\Repository\ProductCategoryRepository;
 use App\Repository\ProductPriceRepository;
 use App\Repository\ProductRepository;
+use App\Repository\ProductStockRepository;
 use App\Repository\SupplierRepository;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
@@ -17,6 +18,7 @@ use App\Services\LoginHistoryService;
 use App\Services\ProductCategoryService;
 use App\Services\ProductPriceService;
 use App\Services\ProductService;
+use App\Services\ProductStockService;
 use App\Services\SupplierService;
 use App\Services\RoleService;
 use App\Services\UserService;
@@ -40,6 +42,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ProductPriceRepository::class, ProductPriceService::class);
         $this->app->bind(ProductCategoryRepository::class, ProductCategoryService::class);
         $this->app->bind(RoleRepository::class, RoleService::class);
+        $this->app->bind(ProductStockRepository::class, ProductStockService::class);
     }
 
     /**
