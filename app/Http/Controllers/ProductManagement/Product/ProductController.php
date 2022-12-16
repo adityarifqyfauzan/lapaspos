@@ -75,7 +75,7 @@ class ProductController extends Controller
 
             $resp = $this->context->store($request);
 
-            if ($resp->http_status == Response::HTTP_OK) {
+            if ($resp->http_status == Response::HTTP_CREATED) {
                 return $this->success($resp->message, $resp->data, $resp->http_status);
             }
 
