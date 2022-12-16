@@ -6,6 +6,8 @@ use App\Http\Controllers\ProductManagement\Category\CategoryController;
 use App\Http\Controllers\ProductManagement\Category\CategoryStatusController;
 use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitController;
 use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitStatusController;
+use App\Http\Controllers\ProductManagement\Product\ProductController;
+use App\Http\Controllers\ProductManagement\Product\ProductStatusController;
 use App\Http\Controllers\ProductManagement\Supplier\SupplierController;
 use App\Http\Controllers\ProductManagement\Supplier\SupplierStatusController;
 use App\Jobs\TestJob;
@@ -43,6 +45,9 @@ Route::middleware(['auth:api'])->group(function () {
 
             Route::resource('supplier', SupplierController::class);
             Route::put('supplier/status/{id}', SupplierStatusController::class);
+
+            Route::resource('product', ProductController::class);
+            Route::put('product/status/{id}', ProductStatusController::class);
 
         });
     });
