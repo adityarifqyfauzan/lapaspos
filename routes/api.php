@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitController;
 use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitStatusController;
 use App\Http\Controllers\ProductManagement\Product\ProductController;
 use App\Http\Controllers\ProductManagement\Product\ProductStatusController;
+use App\Http\Controllers\ProductManagement\Stock\StockInController;
 use App\Http\Controllers\ProductManagement\Supplier\SupplierController;
 use App\Http\Controllers\ProductManagement\Supplier\SupplierStatusController;
 use App\Jobs\TestJob;
@@ -48,6 +49,15 @@ Route::middleware(['auth:api'])->group(function () {
 
             Route::resource('product', ProductController::class);
             Route::put('product/status/{id}', ProductStatusController::class);
+
+            Route::prefix('stock')->group(function () {
+
+                // stock in
+                Route::post('in', [StockInController::class, 'create']);
+                Route::put('in/{id}', [StockInController::class, 'update']);
+                Route::delete('in/{id}', [StockInController::class, 'destroy']);
+
+            });
 
         });
     });
