@@ -40,7 +40,7 @@ class AuthController extends Controller
                 return $this->success($resp->message, $resp->data, $resp->http_status);
             }
 
-            return $this->failed($resp->message, $resp->data, $resp->http_status);
+            return $this->failed($resp->message, $resp->http_status);
 
         } catch (Exception $e) {
 
