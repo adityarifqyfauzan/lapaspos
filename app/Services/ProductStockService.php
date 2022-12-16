@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helper\Pagination;
 use App\Models\ProductStock;
 use App\Repository\ProductStockRepository;
 use Illuminate\Support\Arr;
@@ -23,9 +24,24 @@ class ProductStockService extends Service implements ProductStockRepository
 
     }
 
+    public function findPagedBy($criteria = [], $page, $size) {
+
+        $offset = Pagination::getOffset($page, $size);
+
+        $product_stocks = ProductStock::with('product:id,name', 'supplier:id,name')->where(Arr::except($criteria, "status"));
+
+        if (Arr::exists($criteria, "status")) {
+            $product_stocks = $product_stocks->whereIn("status", (array) $criteria["status"]);
+        }
+
+        $product_stocks = $product_stocks->take($size)->offset($offset)->get();
+        return $product_stocks;
+
+    }
+
     public function findOneBy($criteria = []) {
 
-        $product_stock = ProductStock::where($criteria)->first();
+        $product_stock = ProductStock::with('product:id,name', 'supplier:id,name')->where($criteria)->first();
         return $product_stock;
 
     }
@@ -51,5 +67,15 @@ class ProductStockService extends Service implements ProductStockRepository
         return $this->serviceReturn(false);
     }
 
+    public function count($criteria = []): int {
+        $product_stocks = ProductStock::where(Arr::except($criteria, "status"));
+
+        if (Arr::exists($criteria, "status")) {
+            $product_stocks = $product_stocks->whereIn("status", (array) $criteria["status"]);
+        }
+
+        $product_stocks = $product_stocks->count();
+        return $product_stocks;
+    }
 
 }

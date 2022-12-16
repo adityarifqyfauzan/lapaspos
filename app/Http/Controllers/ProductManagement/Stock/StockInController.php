@@ -17,6 +17,35 @@ class StockInController extends Controller
         $this->stock_context = $stock_context;
     }
 
+    public function index(Request $request)
+    {
+        try {
+
+            $resp = $this->stock_context->getBy($request);
+            return $this->success($resp->message, $resp->data, $resp->http_status, $resp->pagination);
+
+        } catch (Exception $e) {
+            return $this->failed($this->error($e->getMessage()));
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+
+            $resp = $this->stock_context->getOneBy($id);
+
+            if ($resp->http_status == Response::HTTP_OK) {
+                return $this->success($resp->message, $resp->data, $resp->http_status);
+            }
+
+            return $this->failed($resp->message, $resp->http_status);
+
+        } catch (Exception $e) {
+            return $this->failed($this->error($e->getMessage()));
+        }
+    }
+
     public function create(Request $request)
     {
         try {

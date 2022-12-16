@@ -53,6 +53,8 @@ Route::middleware(['auth:api'])->group(function () {
             Route::prefix('stock')->group(function () {
 
                 // stock in
+                Route::get('in', [StockInController::class, 'index']);
+                Route::get('in/{id}', [StockInController::class, 'show']);
                 Route::post('in', [StockInController::class, 'create']);
                 Route::put('in/{id}', [StockInController::class, 'update']);
                 Route::delete('in/{id}', [StockInController::class, 'destroy']);

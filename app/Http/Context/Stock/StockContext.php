@@ -23,6 +23,49 @@ class StockContext extends Context implements StockContextInterface
         $this->product_service = $product_service;
     }
 
+    private function getCriteria(Request $request): array {
+        $criteria = [];
+
+        if ($request->query('product_id') != null) {
+            $criteria['id'] = $request->query('product_id');
+        }
+
+        if ($request->query('status') != null) {
+            $criteria['status'] = $request->query('status');
+        }
+
+        return $criteria;
+    }
+
+    public function getBy(Request $request) {
+
+        $criteria = $this->getCriteria($request);
+        $pagination = $this->getPageAndSize($request);
+
+        $product_stocks = $this->product_stock_service->findPagedBy($criteria, $pagination->page, $pagination->size);
+
+        return $this->returnContext(
+            Response::HTTP_OK,
+            config('messages.general.found'),
+            $product_stocks,
+            $this->setPagination(
+                $pagination->page,
+                $pagination->size,
+                $this->product_stock_service->count($criteria)
+            )
+        );
+
+    }
+
+    public function getOneBy($id) {
+
+        $product_stock = $this->product_stock_service->findOneBy(["id" => $id]);
+        if (!$product_stock) {
+            return $this->returnContext(Response::HTTP_NOT_FOUND, config('messages.general.not_found'));
+        }
+        return $this->returnContext(Response::HTTP_OK, config('messages.general.found'), $product_stock);
+    }
+
     public function store(Request $request) {
 
         $product = $this->product_service->findOneBy(["id" => $request->product_id]);
