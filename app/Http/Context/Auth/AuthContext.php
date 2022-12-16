@@ -5,6 +5,7 @@ namespace App\Http\Context\Auth;
 use App\Http\Context\Context;
 use App\Models\LoginHistory;
 use App\Repository\LoginHistoryRepository;
+use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,12 +17,15 @@ class AuthContext extends Context implements AuthContextInterface
 
     protected LoginHistoryRepository $login_history_service;
 
+    protected RoleRepository $role_service;
+
     protected UserRepository $user_service;
 
-    function __construct(LoginHistoryRepository $login_history_service, UserRepository $user_service)
+    function __construct(LoginHistoryRepository $login_history_service, UserRepository $user_service, RoleRepository $role_service)
     {
         $this->login_history_service = $login_history_service;
         $this->user_service = $user_service;
+        $this->role_service = $role_service;
     }
 
     public function login(Request $request) {
@@ -39,9 +43,15 @@ class AuthContext extends Context implements AuthContextInterface
                     return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ' gagal membuat login history');
                 }
 
+                $role = $this->role_service->findOneBy(['id' => $user->role_id]);
+                if (!$role) {
+                    return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ' user tidak memiliki role');
+                }
+
                 return $this->returnContext(Response::HTTP_OK, config('messages.auth.login.success'), [
                     "access_token" => $token,
-                    "token_type" => "bearer"
+                    "token_type" => "bearer",
+                    "role" => $role->slug
                 ]);
 
             }

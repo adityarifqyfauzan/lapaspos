@@ -36,7 +36,11 @@ class AuthController extends Controller
 
             $resp = $this->context->login($request);
 
-            return $this->success($resp->message, $resp->data, $resp->http_status);
+            if ($resp->http_status == Response::HTTP_OK) {
+                return $this->success($resp->message, $resp->data, $resp->http_status);
+            }
+
+            return $this->failed($resp->message, $resp->data, $resp->http_status);
 
         } catch (Exception $e) {
 
