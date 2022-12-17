@@ -10,6 +10,8 @@ use App\Http\Context\ItemUnit\ItemUnitContext;
 use App\Http\Context\ItemUnit\ItemUnitContextInterface;
 use App\Http\Context\Product\ProductContext;
 use App\Http\Context\Product\ProductContextInterface;
+use App\Http\Context\Stock\StockContext;
+use App\Http\Context\Stock\StockContextInterface;
 use App\Http\Context\Supplier\SupplierContext;
 use App\Http\Context\Supplier\SupplierContextInterface;
 use Illuminate\Support\ServiceProvider;
@@ -28,6 +30,7 @@ class ContextProvider extends ServiceProvider
         $this->app->bind(ItemUnitContextInterface::class, ItemUnitContext::class);
         $this->app->bind(SupplierContextInterface::class, SupplierContext::class);
         $this->app->bind(ProductContextInterface::class, ProductContext::class);
+        $this->app->bind(StockContextInterface::class, StockContext::class);
     }
 
     /**

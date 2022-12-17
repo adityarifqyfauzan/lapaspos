@@ -10,6 +10,7 @@ use App\Repository\ItemUnitRepository;
 use App\Repository\ProductCategoryRepository;
 use App\Repository\ProductPriceRepository;
 use App\Repository\ProductRepository;
+use App\Repository\ProductStockRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -28,12 +29,15 @@ class ProductContext extends Context implements ProductContextInterface
 
     protected ItemUnitRepository $item_unit_service;
 
-    function __construct(ProductRepository $product_service, ProductPriceRepository $product_price_service, ProductCategoryRepository $product_category_service, ItemUnitRepository $item_unit_service)
+    protected ProductStockRepository $product_stock_service;
+
+    function __construct(ProductRepository $product_service, ProductPriceRepository $product_price_service, ProductCategoryRepository $product_category_service, ItemUnitRepository $item_unit_service, ProductStockRepository $product_stock_service)
     {
         $this->product_service = $product_service;
         $this->product_price_service = $product_price_service;
         $this->product_category_service = $product_category_service;
         $this->item_unit_service = $item_unit_service;
+        $this->product_stock_service = $product_stock_service;
     }
 
     private function getCriteria(Request $request): array {
@@ -66,6 +70,17 @@ class ProductContext extends Context implements ProductContextInterface
         return $criteria;
     }
 
+    private function getStock($product_id)
+    {
+        $stock_in = $this->product_stock_service->findBy(["product_id" => $product_id, "status" => "in"]);
+
+        // all stock where the status is except in
+        $stock_out = $this->product_stock_service->findBy(["product_id" => $product_id, "status" => ["out", "sale", "return", "opname"]]);
+
+        return $stock_in - $stock_out;
+
+    }
+
     public function getBy(Request $request) {
 
         $criteria = $this->getCriteria($request);
@@ -83,7 +98,11 @@ class ProductContext extends Context implements ProductContextInterface
                 return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', Produk tidak memiliki satuan!');
             }
 
+            $stock = $this->getStock($product->id);
+            $product = Arr::add($product, "stock", (int) $stock);
+
             $product = Arr::add($product, "item_unit_name", $item_unit->name);
+
 
             $result[] = $product;
 
@@ -202,6 +221,18 @@ class ProductContext extends Context implements ProductContextInterface
             $product->name = $request->name;
             $product->item_unit_id = $request->item_unit_id;
             $product->description = $request->description;
+
+            // cek apakah produk ini sudah mempunyai stok
+            if ($product->have_stock != $request->have_stock) {
+
+                $product_stock = $this->product_stock_service->findOneBy(["product_id" => $product->id]);
+                if ($product_stock) {
+                    DB::rollBack();
+                    return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ' Gagal memperbarui status stok, produk ini sudah mempunyai stok');
+                }
+
+            }
+
             $product->have_stock = $request->have_stock;
 
             $product = $this->product_service->update($product);
