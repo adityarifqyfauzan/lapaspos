@@ -123,6 +123,10 @@ class ProductContext extends Context implements ProductContextInterface
         if (!$product) {
             return $this->returnContext(Response::HTTP_NOT_FOUND, config('messages.general.not_found'));
         }
+
+        $stock = $this->getStock($product->id);
+        $product = Arr::add($product, "stock", (int) $stock);
+
         return $this->returnContext(Response::HTTP_OK, config('messages.general.found'), $product);
 
     }
