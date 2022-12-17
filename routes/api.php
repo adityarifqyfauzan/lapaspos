@@ -11,6 +11,8 @@ use App\Http\Controllers\ProductManagement\Product\ProductStatusController;
 use App\Http\Controllers\ProductManagement\Stock\StockInController;
 use App\Http\Controllers\ProductManagement\Supplier\SupplierController;
 use App\Http\Controllers\ProductManagement\Supplier\SupplierStatusController;
+use App\Http\Controllers\UserManagement\Role\RoleController;
+use App\Http\Controllers\UserManagement\Role\RoleStatusController;
 use App\Jobs\TestJob;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -60,6 +62,13 @@ Route::middleware(['auth:api'])->group(function () {
                 Route::delete('in/{id}', [StockInController::class, 'destroy']);
 
             });
+
+        });
+
+        Route::prefix('user-management')->group(function () {
+
+            Route::resource('role', RoleController::class);
+            Route::put('role/status/{id}', RoleStatusController::class);
 
         });
     });
