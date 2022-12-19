@@ -63,7 +63,15 @@ class RoleService extends Service implements RoleRepository
     }
 
     public function count($criteria = []): int{
-        return Role::where($criteria)->count();
+        $roles = Role::where(Arr::except($criteria, ["name"]));
+
+        if (Arr::exists($criteria, "name")) {
+            $roles = $roles->where("name", "like", "%". $criteria["name"] . "%");
+        }
+
+        $roles = $roles->count();
+
+        return $roles;
     }
 
 }

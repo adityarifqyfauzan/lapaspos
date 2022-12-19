@@ -27,16 +27,26 @@ class Product extends Model
         static::creating(function ($model) {
             $model->product_code = Generator::virtualProductCode();
             $model->slug = Str::slug($model->name);
-            $model->created_by = (env('DEBUGGING_MODE', false)) ? 1 : Auth::id();
+            $model->created_by = Auth::id();
         });
 
         static::updating(function ($model) {
             $model->slug = Str::slug($model->name);
-            $model->updated_by = (env('DEBUGGING_MODE', false)) ? 1 : Auth::id();
+            $model->updated_by = Auth::id();
         });
     }
 
     protected $guarded = [];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'have_stock' => 'boolean',
+        'is_active' => 'boolean',
+    ];
 
     /**
      * The categories that belong to the Product
@@ -53,7 +63,7 @@ class Product extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function product_prices(): HasOne
+    public function product_price(): HasOne
     {
         return $this->hasOne(ProductPrice::class)->latest();
     }

@@ -1,6 +1,21 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HelloWorldController;
+use App\Http\Controllers\ProductManagement\Category\CategoryController;
+use App\Http\Controllers\ProductManagement\Category\CategoryStatusController;
+use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitController;
+use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitStatusController;
+use App\Http\Controllers\ProductManagement\Product\ProductController;
+use App\Http\Controllers\ProductManagement\Product\ProductStatusController;
+use App\Http\Controllers\ProductManagement\Stock\StockInController;
+use App\Http\Controllers\ProductManagement\Supplier\SupplierController;
+use App\Http\Controllers\ProductManagement\Supplier\SupplierStatusController;
+use App\Http\Controllers\UserManagement\Role\RoleController;
+use App\Http\Controllers\UserManagement\Role\RoleStatusController;
+use App\Http\Controllers\UserManagement\User\UserController;
+use App\Http\Controllers\UserManagement\User\UserPasswordController;
+use App\Http\Controllers\UserManagement\User\UserStatusController;
 use App\Jobs\TestJob;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -18,8 +33,56 @@ use Illuminate\Foundation\Events\Dispatchable;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/hello-world', HelloWorldController::class);
+Route::middleware(['auth:api'])->group(function () {
+
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/new-password', [UserPasswordController::class, 'newPassword']);
+
+    Route::middleware(['admin'])->group(function () {
+        Route::prefix('product-management')->group(function () {
+
+            Route::resource('category', CategoryController::class);
+            Route::put('category/status/{id}', CategoryStatusController::class);
+
+            Route::resource('item-unit', ItemUnitController::class);
+            Route::put('item-unit/status/{id}', ItemUnitStatusController::class);
+
+            Route::resource('supplier', SupplierController::class);
+            Route::put('supplier/status/{id}', SupplierStatusController::class);
+
+            Route::resource('product', ProductController::class);
+            Route::put('product/status/{id}', ProductStatusController::class);
+
+            Route::prefix('stock')->group(function () {
+
+                // stock in
+                Route::get('in', [StockInController::class, 'index']);
+                Route::get('in/{id}', [StockInController::class, 'show']);
+                Route::post('in', [StockInController::class, 'create']);
+                Route::put('in/{id}', [StockInController::class, 'update']);
+                Route::delete('in/{id}', [StockInController::class, 'destroy']);
+
+            });
+
+        });
+
+        Route::prefix('user-management')->group(function () {
+
+            Route::resource('role', RoleController::class);
+            Route::put('role/status/{id}', RoleStatusController::class);
+
+            Route::resource('user', UserController::class);
+            Route::put('user/reset-password/{id}', [UserPasswordController::class, 'resetPassword']);
+            Route::put('user/status/{id}', UserStatusController::class);
+
+        });
+    });
+
+        Route::middleware(['cashier'])->group(function () {
+
+    });
+
+});
