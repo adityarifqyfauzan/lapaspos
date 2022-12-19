@@ -16,6 +16,8 @@ use App\Http\Context\Stock\StockContext;
 use App\Http\Context\Stock\StockContextInterface;
 use App\Http\Context\Supplier\SupplierContext;
 use App\Http\Context\Supplier\SupplierContextInterface;
+use App\Http\Context\User\UserContext;
+use App\Http\Context\User\UserContextInterface;
 use Illuminate\Support\ServiceProvider;
 
 class ContextProvider extends ServiceProvider
@@ -34,6 +36,7 @@ class ContextProvider extends ServiceProvider
         $this->app->bind(ProductContextInterface::class, ProductContext::class);
         $this->app->bind(StockContextInterface::class, StockContext::class);
         $this->app->bind(RoleContextInterface::class, RoleContext::class);
+        $this->app->bind(UserContextInterface::class, UserContext::class);
     }
 
     /**
