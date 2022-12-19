@@ -34,7 +34,7 @@ class AuthContext extends Context implements AuthContextInterface
 
         if ($user) {
 
-            if (!$user->is_actice) {
+            if (!$user->is_active) {
                 return $this->returnContext(
                     Response::HTTP_UNPROCESSABLE_ENTITY,
                     config('messages.auth.login.error') . ' user tidak aktif'
