@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Cashier\Product\ProductListController;
 use App\Http\Controllers\HelloWorldController;
 use App\Http\Controllers\ProductManagement\Category\CategoryController;
 use App\Http\Controllers\ProductManagement\Category\CategoryStatusController;
@@ -81,7 +82,9 @@ Route::middleware(['auth:api'])->group(function () {
         });
     });
 
-        Route::middleware(['cashier'])->group(function () {
+    Route::middleware(['cashier'])->group(function () {
+
+        Route::get('product-list', ProductListController::class);
 
     });
 
