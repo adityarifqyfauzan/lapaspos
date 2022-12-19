@@ -34,6 +34,13 @@ class AuthContext extends Context implements AuthContextInterface
 
         if ($user) {
 
+            if (!$user->is_actice) {
+                return $this->returnContext(
+                    Response::HTTP_UNPROCESSABLE_ENTITY,
+                    config('messages.auth.login.error') . ' user tidak aktif'
+                );
+            }
+
             if (Hash::check($request->password, $user->password)) {
 
                 $token = Auth::guard('api')->login($user);
