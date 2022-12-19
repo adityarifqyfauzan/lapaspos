@@ -12,7 +12,7 @@ class UserService extends Service implements UserRepository
     public function findBy($criteria = [], $page, $size){
 
         $offset = Pagination::getOffset($page, $size);
-        $users = User::with('role', 'activities', 'login_histories')->where(Arr::except($criteria, ["name"]));
+        $users = User::with('role:id,name,slug',)->where(Arr::except($criteria, ["name"]));
 
         if (Arr::exists($criteria, "name")) {
             $users = $users->where("name", "like", "%". $criteria["name"] . "%");
