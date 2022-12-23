@@ -19,13 +19,36 @@ class ItemUnitContext extends Context implements ItemUnitContextInterface
         $this->service = $service;
     }
 
+    private function getCriteria(Request $request): array {
+        $criteria = [];
+
+        if ($request->query('item_unit_id') != null) {
+            $criteria['id'] = $request->query('item_unit_id');
+        }
+
+        if ($request->query('name') != null) {
+            $criteria['name'] = $request->query('name');
+        }
+
+        if ($request->query('slug') != null) {
+            $criteria['slug'] = $request->query('slug');
+        }
+
+        if ($request->query('is_active') != null) {
+            $criteria['is_active'] = ($request->query('is_active') == "true") ? 1 : 0;
+        }
+
+        return $criteria;
+    }
+
     public function getBy(Request $request) {
 
+        $criteria = $this->getCriteria($request);
         $pagination = $this->getPageAndSize($request);
 
-        $resp = $this->service->findBy([], $pagination->page, $pagination->size);
+        $resp = $this->service->findBy($criteria, $pagination->page, $pagination->size);
 
-        return $this->returnContext(Response::HTTP_OK, config('messages.general.found'), $resp, $this->setPagination($pagination->page, $pagination->size, $this->service->count([])));
+        return $this->returnContext(Response::HTTP_OK, config('messages.general.found'), $resp, $this->setPagination($pagination->page, $pagination->size, $this->service->count($criteria)));
 
     }
 

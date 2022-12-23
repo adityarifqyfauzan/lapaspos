@@ -34,7 +34,7 @@ class ProductStockService extends Service implements ProductStockRepository
             $product_stocks = $product_stocks->whereIn("status", (array) $criteria["status"]);
         }
 
-        $product_stocks = $product_stocks->take($size)->offset($offset)->get();
+        $product_stocks = $product_stocks->orderBy("id", "DESC")->take($size)->offset($offset)->get();
         return $product_stocks;
 
     }
@@ -68,7 +68,7 @@ class ProductStockService extends Service implements ProductStockRepository
     }
 
     public function count($criteria = []): int {
-        $product_stocks = ProductStock::where(Arr::except($criteria, "status"));
+        $product_stocks = ProductStock::with('product:id,name', 'supplier:id,name')->where(Arr::except($criteria, "status"));
 
         if (Arr::exists($criteria, "status")) {
             $product_stocks = $product_stocks->whereIn("status", (array) $criteria["status"]);
