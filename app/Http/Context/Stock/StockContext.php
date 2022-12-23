@@ -26,12 +26,20 @@ class StockContext extends Context implements StockContextInterface
     private function getCriteria(Request $request): array {
         $criteria = [];
 
-        if ($request->query('product_id') != null) {
-            $criteria['id'] = $request->query('product_id');
+        if ($request->query('id') != null) {
+            $criteria['id'] = $request->query('id');
         }
 
         if ($request->query('status') != null) {
             $criteria['status'] = $request->query('status');
+        }
+
+        if ($request->query('supplier_id') != null) {
+            $criteria['supplier_id'] = $request->query('supplier_id');
+        }
+
+        if ($request->query('product_id') != null) {
+            $criteria['product_id'] = $request->query('product_id');
         }
 
         return $criteria;
