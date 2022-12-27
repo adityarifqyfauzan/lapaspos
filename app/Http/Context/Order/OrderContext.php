@@ -206,6 +206,9 @@ class OrderContext extends Context implements OrderContextInterface
             // updated qty
             $updated_qty = [];
 
+            // products
+            $order_result = [];
+
             // cek apakah data product ada atau tidak
             if (count($products) < 1) {
                 DB::rollback();
@@ -353,6 +356,12 @@ class OrderContext extends Context implements OrderContextInterface
                     "stock" => $value->qty,
                     "status" => "sale"
                 ];
+
+                $order_result[] = [
+                    "product_name" => $value->product->name,
+                    "qty" => $value->qty,
+                    "subtotal" => $value->total
+                ];
             }
             dispatch(new ProductStockUpdateJob((object)$payload_product_stock));
 
@@ -362,6 +371,7 @@ class OrderContext extends Context implements OrderContextInterface
                 config('messages.general.created') . ' Order berhasil dibuat',
                 [
                     "order_id" => $order->data->id,
+                    "products" => $order_result,
                     "total_payment" => $total_payment + $total_update_payment
                 ]
             );

@@ -103,6 +103,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('order/{id}', [OrderController::class, 'show']);
         Route::post('order', [OrderController::class, 'createOrder']);
         Route::put('order/cancel/{id}', [OrderController::class, 'cancelOrder']);
+        Route::get('payment/{id}', [PaymentController::class, 'show']);
         Route::post('payment', [PaymentController::class, 'store']);
 
         Route::prefix('report')->group(function () {
