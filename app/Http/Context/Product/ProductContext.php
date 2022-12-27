@@ -2,6 +2,7 @@
 
 namespace App\Http\Context\Product;
 
+use App\Helper\ProductStockHelper;
 use App\Http\Context\Context;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -70,17 +71,6 @@ class ProductContext extends Context implements ProductContextInterface
         return $criteria;
     }
 
-    private function getStock($product_id)
-    {
-        $stock_in = $this->product_stock_service->findBy(["product_id" => $product_id, "status" => "in"]);
-
-        // all stock where the status is except in
-        $stock_out = $this->product_stock_service->findBy(["product_id" => $product_id, "status" => ["out", "sale", "return", "opname"]]);
-
-        return $stock_in - $stock_out;
-
-    }
-
     public function getBy(Request $request) {
 
         $criteria = $this->getCriteria($request);
@@ -90,6 +80,9 @@ class ProductContext extends Context implements ProductContextInterface
 
         $result = [];
 
+        // product stock helper
+        $product_stock_helper = new ProductStockHelper($this->product_stock_service);
+
         foreach($products as $product) {
 
             // item unit
@@ -98,7 +91,7 @@ class ProductContext extends Context implements ProductContextInterface
                 return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', Produk tidak memiliki satuan!');
             }
 
-            $stock = $this->getStock($product->id);
+            $stock = $product_stock_helper->getProductStock($product->id);
             $product = Arr::add($product, "stock", (int) $stock);
 
             $product = Arr::add($product, "item_unit_name", $item_unit->name);
@@ -124,7 +117,10 @@ class ProductContext extends Context implements ProductContextInterface
             return $this->returnContext(Response::HTTP_NOT_FOUND, config('messages.general.not_found'));
         }
 
-        $stock = $this->getStock($product->id);
+        // product helper
+        $product_stock_helper = new ProductStockHelper($this->product_stock_service);
+
+        $stock = $product_stock_helper->getProductStock($product->id);
         $product = Arr::add($product, "stock", (int) $stock);
 
         return $this->returnContext(Response::HTTP_OK, config('messages.general.found'), $product);

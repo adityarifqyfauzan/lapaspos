@@ -1,7 +1,13 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Cashier\Category\CategoryListController;
+use App\Http\Controllers\Cashier\Order\OrderController;
+use App\Http\Controllers\Cashier\OrderStatus\OrderStatusController;
+use App\Http\Controllers\Cashier\Payment\PaymentController;
 use App\Http\Controllers\Cashier\Product\ProductListController;
+use App\Http\Controllers\Cashier\Report\ReportingController;
+use App\Http\Controllers\Dashboard\ChartController;
 use App\Http\Controllers\HelloWorldController;
 use App\Http\Controllers\ProductManagement\Category\CategoryController;
 use App\Http\Controllers\ProductManagement\Category\CategoryStatusController;
@@ -80,12 +86,29 @@ Route::middleware(['auth:api'])->group(function () {
             Route::put('user/status/{id}', UserStatusController::class);
 
         });
+
+        Route::prefix('reporting')->group(function () {
+            Route::get('summary', [ReportingController::class, 'summary']);
+            Route::get('product-sale', [ReportingController::class, 'productSale']);
+            Route::get('transaction-summary', [ChartController::class, 'transactionSummary']);
+        });
     });
 
     Route::middleware(['cashier'])->group(function () {
 
         Route::get('product-list', ProductListController::class);
+        Route::get('category-list', CategoryListController::class);
+        Route::get('order-status', [OrderStatusController::class, 'index']);
+        Route::get('order', [OrderController::class, 'index']);
+        Route::get('order/{id}', [OrderController::class, 'show']);
+        Route::post('order', [OrderController::class, 'createOrder']);
+        Route::put('order/cancel/{id}', [OrderController::class, 'cancelOrder']);
+        Route::post('payment', [PaymentController::class, 'store']);
 
+        Route::prefix('report')->group(function () {
+            Route::get('summary', [ReportingController::class, 'summary']);
+            Route::get('product-sale', [ReportingController::class, 'productSale']);
+        });
     });
 
 });

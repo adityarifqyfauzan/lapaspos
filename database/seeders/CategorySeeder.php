@@ -20,9 +20,6 @@ class CategorySeeder extends Seeder
                 'name' => 'makanan'
             ],
             [
-                'name' => 'pedas'
-            ],
-            [
                 'name' => 'minuman'
             ]
         ];

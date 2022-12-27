@@ -14,7 +14,6 @@ class Context
     /**
      * this function used to return the proses of context
      *
-     * @param boolean $process -> its represented if the proses is success or not (using boolean)
      * @param int $http_status
      * @param string $message
      * @param $data
