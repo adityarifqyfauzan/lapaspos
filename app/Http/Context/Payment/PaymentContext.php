@@ -44,6 +44,55 @@ class PaymentContext extends Context implements PaymentContextInterface
         $this->product_stock_service = $product_stock_service;
     }
 
+    public function getPayment($id) {
+
+        $order = $this->order_service->findOneBy(["id" => $id]);
+        if (!$order) {
+            return $this->returnContext(
+                Response::HTTP_NOT_FOUND,
+                config('messages.general.not_found') . ' order tidak ada'
+            );
+        }
+
+        if ($order->order_status_id == config('constants.order_status.sukses')) {
+            return $this->returnContext(
+                Response::HTTP_UNPROCESSABLE_ENTITY,
+                'Pesanan sudah dibayar'
+            );
+        }
+
+        if ($order->order_status_id == config('constants.order_status.dibatalkan')) {
+            return $this->returnContext(
+                Response::HTTP_UNPROCESSABLE_ENTITY,
+                'Pesanan sudah dibatalkan'
+            );
+        }
+
+        $order_details = $this->order_detail_service->findBy(["order_id" => $id], 0, 0);
+
+        $order_result = [];
+        $total_payment = 0;
+
+        foreach ($order_details as $value) {
+            $order_result[] = [
+                "product_name" => $value->product->name,
+                "qty" => $value->qty,
+                "subtotal" => $value->total
+            ];
+            $total_payment += $value->total;
+        }
+
+        return $this->returnContext(
+            Response::HTTP_OK,
+            config('messages.general.found'),
+            [
+                "order_id" => $order->id,
+                "products" => $order_result,
+                "total_payment" => $total_payment
+            ]
+        );
+    }
+
     public function store(Request $request) {
 
         try {
