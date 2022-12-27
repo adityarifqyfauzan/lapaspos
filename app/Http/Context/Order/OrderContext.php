@@ -397,6 +397,13 @@ class OrderContext extends Context implements OrderContextInterface
                 );
             }
 
+            if ($order->order_status_id == config('constants.order_status.sukses')) {
+                return $this->returnContext(
+                    Response::HTTP_OK,
+                    'Pesanan ' . $order->code . ' sudah berhasil'
+                );
+            }
+
             // get previous order status
             $previous_order_status = $order->order_status_id;
 
