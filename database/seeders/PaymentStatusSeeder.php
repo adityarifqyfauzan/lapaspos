@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
+use App\Models\PaymentStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class RoleSeeder extends Seeder
+class PaymentStatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,15 +17,17 @@ class RoleSeeder extends Seeder
     {
         $data = [
             [
-                'name' => 'Admin'
+                "name" => "Pending"
             ],
             [
-                'name' => 'Kasir'
-            ]
+                "name" => "Sukses"
+            ],
+            [
+                "name" => "Gagal"
+            ],
         ];
-
         foreach ($data as $value) {
-            Role::create($value);
+            PaymentStatus::create($value);
         }
     }
 }

@@ -8,8 +8,16 @@ use App\Http\Context\Category\CategoryContext;
 use App\Http\Context\Category\CategoryContextInterface;
 use App\Http\Context\ItemUnit\ItemUnitContext;
 use App\Http\Context\ItemUnit\ItemUnitContextInterface;
+use App\Http\Context\Order\OrderContext;
+use App\Http\Context\Order\OrderContextInterface;
+use App\Http\Context\OrderStatus\OrderStatusContext;
+use App\Http\Context\OrderStatus\OrderStatusContextInterface;
+use App\Http\Context\Payment\PaymentContext;
+use App\Http\Context\Payment\PaymentContextInterface;
 use App\Http\Context\Product\ProductContext;
 use App\Http\Context\Product\ProductContextInterface;
+use App\Http\Context\Reporting\ReportingContext;
+use App\Http\Context\Reporting\ReportingContextInterface;
 use App\Http\Context\Role\RoleContext;
 use App\Http\Context\Role\RoleContextInterface;
 use App\Http\Context\Stock\StockContext;
@@ -37,6 +45,10 @@ class ContextProvider extends ServiceProvider
         $this->app->bind(StockContextInterface::class, StockContext::class);
         $this->app->bind(RoleContextInterface::class, RoleContext::class);
         $this->app->bind(UserContextInterface::class, UserContext::class);
+        $this->app->bind(OrderContextInterface::class, OrderContext::class);
+        $this->app->bind(PaymentContextInterface::class, PaymentContext::class);
+        $this->app->bind(ReportingContextInterface::class, ReportingContext::class);
+        $this->app->bind(OrderStatusContextInterface::class, OrderStatusContext::class);
     }
 
     /**

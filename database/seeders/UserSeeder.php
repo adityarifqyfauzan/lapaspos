@@ -22,7 +22,14 @@ class UserSeeder extends Seeder
                 'email' => 'administrator@gmail.com',
                 'password' => 'password',
                 'role_id' => 1
-            ]
+            ],
+            [
+                'name' => 'Kasir',
+                'username' => 'kasir',
+                'email' => 'kasir@gmail.com',
+                'password' => 'password',
+                'role_id' => 2
+            ],
         ];
 
         foreach ($data as $value) {

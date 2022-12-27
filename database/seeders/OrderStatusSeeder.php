@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
+use App\Models\OrderStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class RoleSeeder extends Seeder
+class OrderStatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,15 +17,18 @@ class RoleSeeder extends Seeder
     {
         $data = [
             [
-                'name' => 'Admin'
+                'name' => 'Belum dibayar',
             ],
             [
-                'name' => 'Kasir'
-            ]
+                'name' => 'Sukses',
+            ],
+            [
+                'name' => 'Dibatalkan',
+            ],
         ];
 
         foreach ($data as $value) {
-            Role::create($value);
+            OrderStatus::create($value);
         }
     }
 }

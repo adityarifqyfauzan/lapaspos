@@ -2,13 +2,30 @@
 
 namespace App\Models;
 
+use App\Helper\Generator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 class Payment extends Model
 {
     use HasFactory;
+
+    /**
+     * The "boot" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            // generate invoice
+            $model->invoice = Generator::invoiceCode();
+        });
+
+    }
 
     protected $guarded = [];
 
@@ -30,6 +47,16 @@ class Payment extends Model
     public function payment_method(): BelongsTo
     {
         return $this->belongsTo(PaymentMethod::class);
+    }
+
+    /**
+     * Get the payment_status that owns the Payment
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function payment_status(): BelongsTo
+    {
+        return $this->belongsTo(PaymentStatus::class);
     }
 
 }

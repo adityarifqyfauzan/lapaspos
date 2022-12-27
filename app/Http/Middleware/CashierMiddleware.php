@@ -19,7 +19,7 @@ class CashierMiddleware
     public function handle(Request $request, Closure $next)
     {
         $user = Auth::user();
-        if ($user->role_id == config('constants.roles.cashier') || $user->role_id == config('constants.roles.super-admin')) {
+        if ($user->role_id == config('constants.roles.cashier')) {
             return $next($request);
         }
 
