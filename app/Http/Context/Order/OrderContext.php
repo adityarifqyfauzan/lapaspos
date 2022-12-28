@@ -73,7 +73,7 @@ class OrderContext extends Context implements OrderContextInterface
         }
 
         if ($request->query('is_today') != null) {
-            $criteria['is_today'] = ($request->query('is_today') == "true") ? 1 : 0;
+            $criteria['is_today'] = ($request->query('is_today') == "true") ? true : false;
         }
 
         return $criteria;
