@@ -16,7 +16,7 @@ class OrderService extends Service implements OrderRepository
         $offset = Pagination::getOffset($page, $size);
         $orders = DB::table('orders')->where(Arr::except($criteria, ["is_today"]))->orderBy("id", "desc");
 
-        if (Arr::exists($criteria, "is_today")) {
+        if (Arr::exists($criteria, "is_today") && $criteria["is_today"]) {
             $orders = $orders->whereDate('created_at', Carbon::today());
         }
 
@@ -57,7 +57,7 @@ class OrderService extends Service implements OrderRepository
     public function count($criteria = []): int {
         $orders = DB::table('orders')->where(Arr::except($criteria, ["is_today"]))->orderBy("id", "desc");
 
-        if (Arr::exists($criteria, "is_today")) {
+        if (Arr::exists($criteria, "is_today") && $criteria["is_today"]) {
             $orders = $orders->whereDate('created_at', Carbon::today());
         }
 
