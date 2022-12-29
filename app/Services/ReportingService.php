@@ -119,7 +119,7 @@ class ReportingService extends Service implements ReportingRepository
             $start_date = now()->addMonth(-6);
         }
 
-        $orders = DB::table('orders')->where('order_status_id', config('constants.order_status.sukses'));
+        $orders = DB::table('orders')->where('order_status_id', config('constants.order_status.lunas'));
 
         if (!Arr::exists($criteria, "is_max")) {
             $orders = $orders->whereBetween('created_at', [$start_date, now()]);

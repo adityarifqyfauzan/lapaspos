@@ -166,6 +166,7 @@ class OrderContext extends Context implements OrderContextInterface
         // order information
         $result["order_code"] = $order->code;
         $result["order_date"] = $order->created_at;
+        $result["order_status_id"] = $order->order_status_id;
         $result["order_status"] = $order->order_status->name;
         $result["order_detail"] = $details;
         $result["total_amount"] = $total_amount;
@@ -407,7 +408,7 @@ class OrderContext extends Context implements OrderContextInterface
                 );
             }
 
-            if ($order->order_status_id == config('constants.order_status.sukses')) {
+            if ($order->order_status_id == config('constants.order_status.lunas')) {
                 return $this->returnContext(
                     Response::HTTP_OK,
                     'Pesanan ' . $order->code . ' sudah berhasil'

@@ -52,7 +52,7 @@ class ReportingContext extends Context implements ReportingContextInterface
     public function summary(Request $request) {
 
         $criteria = $this->getCriteria($request);
-        $criteria["orders.order_status_id"] = config('constants.order_status.sukses');
+        $criteria["orders.order_status_id"] = config('constants.order_status.lunas');
 
         $user = Auth::user();
 
@@ -82,7 +82,7 @@ class ReportingContext extends Context implements ReportingContextInterface
         $pagination = $this->getPageAndSize($request);
 
         // get only from successed transaction
-        $criteria['orders.order_status_id'] = config('constants.order_status.sukses');
+        $criteria['orders.order_status_id'] = config('constants.order_status.lunas');
 
         $user = Auth::user();
 

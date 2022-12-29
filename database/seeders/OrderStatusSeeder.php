@@ -20,7 +20,7 @@ class OrderStatusSeeder extends Seeder
                 'name' => 'Belum dibayar',
             ],
             [
-                'name' => 'Sukses',
+                'name' => 'Lunas',
             ],
             [
                 'name' => 'Dibatalkan',

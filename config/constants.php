@@ -14,7 +14,7 @@ return [
 
     'order_status' => [
         'belum-dibayar' => 1,
-        'sukses' => 2,
+        'lunas' => 2,
         'dibatalkan' => 3,
     ],
 
