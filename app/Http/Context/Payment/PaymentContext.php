@@ -54,7 +54,7 @@ class PaymentContext extends Context implements PaymentContextInterface
             );
         }
 
-        if ($order->order_status_id == config('constants.order_status.sukses')) {
+        if ($order->order_status_id == config('constants.order_status.lunas')) {
             return $this->returnContext(
                 Response::HTTP_UNPROCESSABLE_ENTITY,
                 'Pesanan sudah dibayar'
@@ -107,7 +107,7 @@ class PaymentContext extends Context implements PaymentContextInterface
             }
 
             // cek apakah order sudah dibayar sebelumnya ?
-            if ($order->order_status_id == config('constants.order_status.sukses')) {
+            if ($order->order_status_id == config('constants.order_status.lunas')) {
                 return $this->returnContext(
                     Response::HTTP_UNPROCESSABLE_ENTITY,
                     'Pesanan sudah dibayar'
@@ -163,7 +163,7 @@ class PaymentContext extends Context implements PaymentContextInterface
                 // get previous order status
                 $previous_order_status = $order->order_status_id;
 
-                $order->order_status_id = config('constants.order_status.sukses');
+                $order->order_status_id = config('constants.order_status.lunas');
                 $order = $this->order_service->update($order);
                 if (!$order->process) {
                     DB::rollBack();
