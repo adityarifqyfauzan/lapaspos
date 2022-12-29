@@ -16,6 +16,7 @@ use App\Repository\PaymentRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use App\Services\ProductStockService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -164,8 +165,9 @@ class OrderContext extends Context implements OrderContextInterface
         $result["cashier"] = $user->name;
 
         // order information
+        $result["order_id"] = $order->id;
         $result["order_code"] = $order->code;
-        $result["order_date"] = $order->created_at;
+        $result["order_date"] = Carbon::parse($order->created_at)->timezone('Asia/Jakarta')->format('Y-m-d H:i:s');;
         $result["order_status_id"] = $order->order_status_id;
         $result["order_status"] = $order->order_status->name;
         $result["order_detail"] = $details;
