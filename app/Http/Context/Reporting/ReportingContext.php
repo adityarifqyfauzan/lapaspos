@@ -31,19 +31,19 @@ class ReportingContext extends Context implements ReportingContextInterface
         }
 
         if ($request->query('is_today') != null) {
-            $criteria['is_today'] = ($request->query('is_today') == "true") ? 1 : 0;
+            $criteria['is_today'] = ($request->query('is_today') == "true") ? true : false;
         }
 
         if ($request->query('is_quarter') != null) {
-            $criteria['is_quarter'] = ($request->query('is_quarter') == "true") ? 1 : 0;
+            $criteria['is_quarter'] = ($request->query('is_quarter') == "true") ? true : false;
         }
 
         if ($request->query('is_semester') != null) {
-            $criteria['is_semester'] = ($request->query('is_semester') == "true") ? 1 : 0;
+            $criteria['is_semester'] = ($request->query('is_semester') == "true") ? true : false;
         }
 
         if ($request->query('is_max') != null) {
-            $criteria['is_max'] = ($request->query('is_max') == "true") ? 1 : 0;
+            $criteria['is_max'] = ($request->query('is_max') == "true") ? true : false;
         }
 
         return $criteria;
