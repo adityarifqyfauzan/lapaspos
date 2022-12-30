@@ -71,7 +71,7 @@ class ReportingService extends Service implements ReportingRepository
             $products = $products->whereBetween('orders.created_at', [$criteria["start_date"], $criteria["end_date"]]);
         }
 
-        if (Arr::exists($criteria, "is_today")) {
+        if (Arr::exists($criteria, "is_today") && $criteria["is_today"]) {
             $products = $products->whereDay('orders.created_at', now()->day);
         }
 
