@@ -26,7 +26,7 @@ class ReportingService extends Service implements ReportingRepository
 
             $orders = $orders->whereBetween('orders.created_at', [$start_date, $end_date]);
 
-        } else if (Arr::exists($criteria, "is_today")) {
+        } else if (Arr::exists($criteria, "is_today") && $criteria["is_today"]) {
             $orders = $orders->whereDay('orders.created_at', now()->day);
         } else {
             $orders = $orders->whereMonth('orders.created_at', now()->month);
@@ -111,11 +111,11 @@ class ReportingService extends Service implements ReportingRepository
         // default start date adalah 1 tahun
         $start_date = now()->addMonth(-12);
 
-        if (Arr::exists($criteria, "is_quarter")) {
+        if (Arr::exists($criteria, "is_quarter") && $criteria["is_quarter"]) {
             $start_date = now()->addMonth(-4);
         }
 
-        if (Arr::exists($criteria, "is_semester")) {
+        if (Arr::exists($criteria, "is_semester") && $criteria["is_semester"]) {
             $start_date = now()->addMonth(-6);
         }
 
