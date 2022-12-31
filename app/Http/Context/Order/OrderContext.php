@@ -167,7 +167,7 @@ class OrderContext extends Context implements OrderContextInterface
         // order information
         $result["order_id"] = $order->id;
         $result["order_code"] = $order->code;
-        $result["order_date"] = Carbon::parse($order->created_at)->timezone('Asia/Jakarta')->format('Y-m-d H:i:s');;
+        $result["order_date"] = Carbon::parse($order->created_at)->timezone('Asia/Jakarta')->format('Y-m-d H:i:s');
         $result["order_status_id"] = $order->order_status_id;
         $result["order_status"] = $order->order_status->name;
         $result["order_detail"] = $details;
