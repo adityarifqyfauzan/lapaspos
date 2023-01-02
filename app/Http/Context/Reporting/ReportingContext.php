@@ -34,6 +34,10 @@ class ReportingContext extends Context implements ReportingContextInterface
             $criteria['is_today'] = ($request->query('is_today') == "true") ? true : false;
         }
 
+        if ($request->query('is_month') != null) {
+            $criteria['is_month'] = ($request->query('is_month') == "true") ? true : false;
+        }
+
         if ($request->query('is_quarter') != null) {
             $criteria['is_quarter'] = ($request->query('is_quarter') == "true") ? true : false;
         }
