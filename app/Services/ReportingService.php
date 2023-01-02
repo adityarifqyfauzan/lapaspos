@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class ReportingService extends Service implements ReportingRepository
 {
     private function summary($criteria = []) {
-        $orders = DB::table('orders')->leftJoin('order_details', 'orders.id', 'order_details.order_id')->leftJoin('product_prices', 'order_details.product_price_id', 'product_prices.id')->where(Arr::except($criteria, ["start_date", "end_date", "is_today"]));
+        $orders = DB::table('orders')->leftJoin('order_details', 'orders.id', 'order_details.order_id')->leftJoin('product_prices', 'order_details.product_price_id', 'product_prices.id')->where(Arr::except($criteria, ["start_date", "end_date", "is_today", "is_month"]));
 
         if (Arr::exists($criteria, "start_date") && Arr::exists($criteria, "end_date")) {
 
@@ -28,7 +28,7 @@ class ReportingService extends Service implements ReportingRepository
 
         } else if (Arr::exists($criteria, "is_today") && $criteria["is_today"]) {
             $orders = $orders->whereDay('orders.created_at', now()->day);
-        } else {
+        } else if (Arr::exists($criteria, "is_month") && $criteria["is_month"]) {
             $orders = $orders->whereMonth('orders.created_at', now()->month);
         }
 
@@ -95,7 +95,7 @@ class ReportingService extends Service implements ReportingRepository
             $products = $products->whereBetween('orders.created_at', [$criteria["start_date"], $criteria["end_date"]]);
         }
 
-        if (Arr::exists($criteria, "is_today")) {
+        if (Arr::exists($criteria, "is_today") && $criteria["is_today"]) {
             $products = $products->whereDay('orders.created_at', now()->day);
         }
 
