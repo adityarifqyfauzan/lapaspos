@@ -12,7 +12,7 @@ return [
         'unauthorized' => 'Unauthorized',
         'created'   => 'Data berhasil ditambahkan!',
         'updated'   => 'Data berhasil diperbarui!',
-        'deleted'   => 'Data berhasil dihapus',
+        'deleted'   => 'Data berhasil dihapus!',
     ],
     'auth' => [
         'login' => [

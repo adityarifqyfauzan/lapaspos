@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('product_id');
             $table->foreignId('supplier_id');
             $table->integer('stock');
-            $table->enum('status', ['in', 'out', 'sale', 'return', 'opname'])->default('in');
+            $table->enum('status', ['in', 'out', 'sale', 'return', 'opname', 'order_cancel'])->default('in');
             $table->text('description')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->timestamps();

@@ -21,8 +21,11 @@ class Order extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->code = Generator::virtualProductCode();
-            $model->user_id = (env('DEBUGGING_MODE', false)) ? 1 : Auth::id();
+            $model->code = Generator::tansactionCode();
+            $model->user_id = Auth::id();
+
+            $order_status = OrderStatus::find(1);
+            $model->order_status_id = $order_status->id;
         });
     }
 

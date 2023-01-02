@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helper\Pagination;
 use App\Models\Category;
 use App\Repository\CategoryRepository;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class CategoryService extends Service implements CategoryRepository
@@ -12,7 +13,14 @@ class CategoryService extends Service implements CategoryRepository
     public function findBy($criteria = [], $page, $size) {
 
         $offset = Pagination::getOffset($page, $size);
-        $categories = Category::where($criteria)->offset($offset)->take($size)->get();
+        $categories = Category::where(Arr::except($criteria, ["name"]));
+
+        if (Arr::exists($criteria, "name")) {
+            $categories = $categories->where("name", "like", "%". $criteria["name"] . "%");
+        }
+
+        $categories = $categories->offset($offset)->take($size)->get();
+
         return $categories;
 
     }
@@ -51,7 +59,14 @@ class CategoryService extends Service implements CategoryRepository
     }
 
     public function count($criteria = []): int {
-        return Category::where($criteria)->count();
+        $categories = Category::where(Arr::except($criteria, ["name"]));
+
+        if (Arr::exists($criteria, "name")) {
+            $categories = $categories->where("name", "like", "%". $criteria["name"] . "%");
+        }
+
+        $categories = $categories->count();
+        return $categories;
     }
 
 }

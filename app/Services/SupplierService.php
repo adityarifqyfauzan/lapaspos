@@ -59,7 +59,15 @@ class SupplierService extends Service implements SupplierRepository
     }
 
     public function count($criteria = []): int{
-        return Supplier::where($criteria)->count();
+        $suppliers = Supplier::where(Arr::except($criteria, ["name"]));
+
+        if (Arr::exists($criteria, "name")) {
+            $suppliers = $suppliers->where("name", "like", "%". $criteria["name"] . "%");
+        }
+
+        $suppliers = $suppliers->count();
+
+        return $suppliers;
     }
 
 }

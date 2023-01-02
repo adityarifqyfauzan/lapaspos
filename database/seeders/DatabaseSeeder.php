@@ -24,6 +24,10 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(CategorySeeder::class);
+        $this->call(PaymentMethodSeeder::class);
+        $this->call(PaymentStatusSeeder::class);
+        $this->call(OrderStatusSeeder::class);
+        $this->call(SupplierSeeder::class);
         // if (App::environment(['local', 'staging'])) {
         //     $this->call(ProductSeeder::class);
         //     $this->call(ProductPriceSeeder::class);

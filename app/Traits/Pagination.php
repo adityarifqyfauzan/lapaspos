@@ -35,8 +35,8 @@ trait Pagination
      */
     public function getPageAndSize(Request $request)
     {
-        $page = $request->query('page', 1);
-        $size = $request->query('size', 10); // default size 20
+        $page = (int) $request->query('page', 1);
+        $size = (int) $request->query('size', 10); // default size 20
         return (object) ["page" => $page, "size" => $size];
     }
 }

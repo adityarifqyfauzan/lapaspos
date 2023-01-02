@@ -5,13 +5,20 @@ namespace App\Services;
 use App\Helper\Pagination;
 use App\Models\ItemUnit;
 use App\Repository\ItemUnitRepository;
+use Illuminate\Support\Arr;
 
 class ItemUnitService extends Service implements ItemUnitRepository
 {
     public function findBy($criteria = [], $page, $size) {
 
         $offset = Pagination::getOffset($page, $size);
-        $item_units = ItemUnit::where($criteria)->offset($offset)->take($size)->get();
+        $item_units = ItemUnit::where(Arr::except($criteria, ["name"]));
+
+        if (Arr::exists($criteria, "name")) {
+            $item_units = $item_units->where("name", "like", "%". $criteria["name"] . "%");
+        }
+
+        $item_units = $item_units->offset($offset)->take($size)->get();
         return $item_units;
 
     }
@@ -49,7 +56,12 @@ class ItemUnitService extends Service implements ItemUnitRepository
     }
 
     public function count($criteria = []): int {
-        return ItemUnit::where($criteria)->count();
+        $item_units = ItemUnit::where(Arr::except($criteria, ["name"]));
+        if (Arr::exists($criteria, "name")) {
+            $item_units = $item_units->where("name", "like", "%". $criteria["name"] . "%");
+        }
+        $item_units = $item_units->count();
+        return $item_units;
     }
 
 }
