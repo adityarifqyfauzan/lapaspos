@@ -17,11 +17,13 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->foreignId('user_id');
+            $table->foreignId('outlet_id');
             $table->foreignId('order_status_id');
             $table->string('note')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('outlet_id')->references('id')->on('outlets');
             $table->foreign('order_status_id')->references('id')->on('order_statuses');
         });
     }

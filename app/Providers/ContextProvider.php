@@ -12,6 +12,8 @@ use App\Http\Context\Order\OrderContext;
 use App\Http\Context\Order\OrderContextInterface;
 use App\Http\Context\OrderStatus\OrderStatusContext;
 use App\Http\Context\OrderStatus\OrderStatusContextInterface;
+use App\Http\Context\Outlet\OutletContext;
+use App\Http\Context\Outlet\OutletContextInterface;
 use App\Http\Context\Payment\PaymentContext;
 use App\Http\Context\Payment\PaymentContextInterface;
 use App\Http\Context\Product\ProductContext;
@@ -49,6 +51,7 @@ class ContextProvider extends ServiceProvider
         $this->app->bind(PaymentContextInterface::class, PaymentContext::class);
         $this->app->bind(ReportingContextInterface::class, ReportingContext::class);
         $this->app->bind(OrderStatusContextInterface::class, OrderStatusContext::class);
+        $this->app->bind(OutletContextInterface::class, OutletContext::class);
     }
 
     /**

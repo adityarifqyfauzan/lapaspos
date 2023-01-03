@@ -9,6 +9,8 @@ use App\Http\Controllers\Cashier\Product\ProductListController;
 use App\Http\Controllers\Cashier\Report\ReportingController;
 use App\Http\Controllers\Dashboard\ChartController;
 use App\Http\Controllers\HelloWorldController;
+use App\Http\Controllers\Outlet\OutletController;
+use App\Http\Controllers\Outlet\OutletStatusController;
 use App\Http\Controllers\ProductManagement\Category\CategoryController;
 use App\Http\Controllers\ProductManagement\Category\CategoryStatusController;
 use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitController;
@@ -92,6 +94,9 @@ Route::middleware(['auth:api'])->group(function () {
             Route::get('product-sale', [ReportingController::class, 'productSale']);
             Route::get('transaction-summary', [ChartController::class, 'transactionSummary']);
         });
+
+        Route::resource('outlet', OutletController::class);
+        Route::put('outlet/status/{id}', OutletStatusController::class);
     });
 
     Route::middleware(['cashier'])->group(function () {
