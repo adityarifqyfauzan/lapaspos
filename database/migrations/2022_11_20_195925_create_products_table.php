@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('outlet_id');
             $table->foreignId('item_unit_id');
             $table->string('product_code')->unique();
             $table->string('barcode')->nullable();
@@ -28,6 +29,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('item_unit_id')->references('id')->on('item_units');
+            $table->foreign('outlet_id')->references('id')->on('outlets');
         });
     }
 
