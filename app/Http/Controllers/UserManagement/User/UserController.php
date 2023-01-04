@@ -70,7 +70,9 @@ class UserController extends Controller
                 'name' => 'required',
                 'username' => 'required|unique:users,username',
                 'password' => 'required|min:6',
-                'role_id' => 'required'
+                'role_id' => 'required',
+                'outlet_id' => 'required',
+                'email' => 'required'
             ]);
 
             if ($validate->fails()) {
@@ -146,7 +148,8 @@ class UserController extends Controller
 
             $validate = Validator::make($request->all(), [
                 'name' => 'required',
-                'role_id' => 'required'
+                'role_id' => 'required',
+                'outlet_id' => 'required'
             ]);
 
             if ($validate->fails()) {
