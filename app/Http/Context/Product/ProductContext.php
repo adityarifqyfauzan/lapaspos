@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -60,6 +61,10 @@ class ProductContext extends Context implements ProductContextInterface
             $criteria['category_id'] = $request->query('category_id');
         }
 
+        if ($request->query('outlet_id') != null) {
+            $criteria['outlet_id'] = $request->query('outlet_id');
+        }
+
         if ($request->query('is_active') != null) {
             $criteria['is_active'] = ($request->query('is_active') == "true") ? 1 : 0;
         }
@@ -75,6 +80,12 @@ class ProductContext extends Context implements ProductContextInterface
 
         $criteria = $this->getCriteria($request);
         $pagination = $this->getPageAndSize($request);
+
+        $user = Auth::user();
+
+        if ($user->role_id != config('constants.roles.admin')) {
+            $criteria['outlet_id'] = $user->outlet_id;
+        }
 
         $products = $this->product_service->findBy($criteria, $pagination->page, $pagination->size);
 

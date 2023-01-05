@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Helper\Generator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,8 +22,9 @@ class Order extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->code = Generator::tansactionCode();
+            $model->code = Generator::tansactionCode(Auth::user()->outlet_id);
             $model->user_id = Auth::id();
+            $model->outlet_id = Auth::user()->outlet_id;
 
             $order_status = OrderStatus::find(1);
             $model->order_status_id = $order_status->id;
@@ -79,5 +81,15 @@ class Order extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'order_details', 'product_id', 'order_id');
+    }
+
+    /**
+     * Get the outlet that owns the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function outlet(): BelongsTo
+    {
+        return $this->belongsTo(Outlet::class);
     }
 }

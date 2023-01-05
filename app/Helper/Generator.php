@@ -23,26 +23,27 @@ class Generator
      * Generate transaction code
      * @return string
      */
-    public static function tansactionCode(): string
+    public static function tansactionCode(int $outlet_id): string
     {
         $order_count = 1;
 
         // get order count today
-        $orders = Order::whereDate('created_at', Carbon::today())->count();
+        $orders = Order::where('outlet_id', $outlet_id)->whereDate('created_at', Carbon::today())->count();
         if ($orders != 0) {
             $order_count = $orders + 1;
         }
 
         $count = str_pad($order_count, 4, '0', STR_PAD_LEFT);
+        $outlet_code = str_pad($outlet_id, 3, '0', STR_PAD_LEFT);
 
-        return config('constants.code.transaction') . $count . date('dmY');
+        return config('constants.code.transaction') . $count . date('dmY') . $outlet_code;
     }
 
     /**
      * Generate invoice code
      * @return string
      */
-    public static function invoiceCode()
+    public static function invoiceCode(int $outlet_id)
     {
         $payment_count = 1;
 
@@ -53,8 +54,9 @@ class Generator
         }
 
         $count = str_pad($payment_count, 4, '0', STR_PAD_LEFT);
+        $outlet_code = str_pad($outlet_id, 3, '0', STR_PAD_LEFT);
 
-        return config('constants.code.invoice') . $count . date('dmY');
+        return config('constants.code.invoice') . $count . date('dmY') . $outlet_code;
     }
 
 }

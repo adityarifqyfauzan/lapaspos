@@ -6,6 +6,7 @@ use App\Helper\Generator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Payment extends Model
@@ -22,7 +23,7 @@ class Payment extends Model
         parent::boot();
         static::creating(function ($model) {
             // generate invoice
-            $model->invoice = Generator::invoiceCode();
+            $model->invoice = Generator::invoiceCode(Auth::user()->outlet_id);
         });
 
     }
