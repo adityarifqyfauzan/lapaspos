@@ -42,6 +42,10 @@ class StockContext extends Context implements StockContextInterface
             $criteria['product_id'] = $request->query('product_id');
         }
 
+        if ($request->query('outlet_id') != null) {
+            $criteria['outlet_id'] = $request->query('outlet_id');
+        }
+
         if ($request->query('start_date') != null) {
             $criteria['start_date'] = $request->query('start_date');
         }

@@ -132,7 +132,7 @@ class ProductContext extends Context implements ProductContextInterface
         /**
          * cek apakah product sudah ada?
          */
-        $product = $this->product_service->findOneBy(['slug' => Str::slug($request->name)]);
+        $product = $this->product_service->findOneBy(['slug' => Str::slug($request->name . ' ' . $request->outlet_id)]);
 
         if ($product) {
             return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, 'Produk dengan nama '. $request->name .' sudah ada, silahkan gunakan nama lain!');
@@ -147,6 +147,7 @@ class ProductContext extends Context implements ProductContextInterface
         $product->name = $request->name;
         $product->item_unit_id = $request->item_unit_id;
         $product->have_stock = $request->have_stock;
+        $product->outlet_id = $request->outlet_id;
 
         $product = $this->product_service->create($product);
 
@@ -209,7 +210,7 @@ class ProductContext extends Context implements ProductContextInterface
                 return $this->returnContext(Response::HTTP_NOT_FOUND, config('messages.general.not_found'));
             }
 
-            $check_existing = $this->product_service->findOneBy(["slug" => Str::slug($request->name)]);
+            $check_existing = $this->product_service->findOneBy(["slug" => Str::slug($request->name . ' ' . $product->outlet_id)]);
 
             if ($check_existing && $check_existing->id != $product->id){
                 return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, "Produk lain dengan nama ". $request->name ." sudah ada, Silahkan gunakan nama lain!");

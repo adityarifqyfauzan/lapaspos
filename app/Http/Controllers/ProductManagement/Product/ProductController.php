@@ -63,7 +63,8 @@ class ProductController extends Controller
 
             $validate = Validator::make($request->all(), [
                 'name' => 'required',
-                'item_unit_id' => 'required',
+                'item_unit_id' => 'required|exists:item_units,id',
+                'outlet_id' => 'required|exists:outlets,id',
                 'categories' => 'required',
                 'base_price' => 'required',
                 'margin' => 'required'
