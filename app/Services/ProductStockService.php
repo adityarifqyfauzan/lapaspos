@@ -29,10 +29,17 @@ class ProductStockService extends Service implements ProductStockRepository
 
         $offset = Pagination::getOffset($page, $size);
 
-        $product_stocks = ProductStock::with('product:id,name', 'supplier:id,name')->where(Arr::except($criteria, ["status", "start_date", "end_date"]));
+        $product_stocks = ProductStock::with('product:id,name,outlet_id', 'supplier:id,name')->where(Arr::except($criteria, ["status", "start_date", "end_date", "outlet_id"]));
 
         if (Arr::exists($criteria, "status")) {
             $product_stocks = $product_stocks->whereIn("status", (array) $criteria["status"]);
+        }
+
+        if (Arr::exists($criteria, "outlet_id")) {
+            $product_stocks = $product_stocks->whereHas('product', function ($q) use ($criteria)
+            {
+                $q->whereIn('outlet_id', (array) $criteria["outlet_id"]);
+            });
         }
 
         if (Arr::exists($criteria, "start_date") && Arr::exists($criteria, "end_date")) {
@@ -50,7 +57,7 @@ class ProductStockService extends Service implements ProductStockRepository
 
     public function findOneBy($criteria = []) {
 
-        $product_stock = ProductStock::with('product:id,name', 'supplier:id,name')->where($criteria)->first();
+        $product_stock = ProductStock::with('product:id,name,outlet_id', 'supplier:id,name')->where($criteria)->first();
         return $product_stock;
 
     }
@@ -77,10 +84,17 @@ class ProductStockService extends Service implements ProductStockRepository
     }
 
     public function count($criteria = []): int {
-        $product_stocks = ProductStock::where(Arr::except($criteria, ["status", "start_date", "end_date"]));
+        $product_stocks = ProductStock::with('product:id,name,outlet_id')->where(Arr::except($criteria, ["status", "start_date", "end_date", "outlet_id"]));
 
         if (Arr::exists($criteria, "status")) {
             $product_stocks = $product_stocks->whereIn("status", (array) $criteria["status"]);
+        }
+
+        if (Arr::exists($criteria, "outlet_id")) {
+            $product_stocks = $product_stocks->whereHas('product', function ($q) use ($criteria)
+            {
+                $q->whereIn('outlet_id', (array) $criteria["outlet_id"]);
+            });
         }
 
         if (Arr::exists($criteria, "start_date") && Arr::exists($criteria, "end_date")) {
