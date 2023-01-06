@@ -91,7 +91,7 @@ class OrderContext extends Context implements OrderContextInterface
 
         $user = Auth::user();
 
-        if ($user->role_id != 1) {
+        if ($user->role_id != config('constants.roles.admin')) {
             $criteria["user_id"] = $user->id;
         }
 
