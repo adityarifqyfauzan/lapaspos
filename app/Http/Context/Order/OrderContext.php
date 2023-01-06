@@ -85,7 +85,11 @@ class OrderContext extends Context implements OrderContextInterface
         $criteria = $this->getCriteria($request);
         $pagination = $this->getPageAndSize($request);
 
-        $criteria["user_id"] = Auth::user()->id;
+        $user = Auth::user();
+
+        if ($user->role_id != config('constants.roles.admin')) {
+            $criteria["user_id"] = $user->id;
+        }
 
         $orders = $this->order_service->findBy($criteria, $pagination->page, $pagination->size);
 
