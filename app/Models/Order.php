@@ -103,4 +103,11 @@ class Order extends Model
     {
         return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('Y-m-d H:i:s');
     }
+    /* The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'order_status_id' => 'integer'
+    ];
 }
