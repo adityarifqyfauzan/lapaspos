@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Jobs\AlertJob;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,7 +53,7 @@ trait ResponseFormatter
      */
     public function failed($message, $code = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
-        Log::alert($message . "[" . $code . "]" . " | " . now());
+        dispatch(new AlertJob($message . "[" . $code . "]" . " | " . now(), 'alert'));
 
         return response()->json([
             "message" => $message
@@ -85,7 +86,7 @@ trait ResponseFormatter
     public function error($message)
     {
 
-        Log::critical($message . ' ' . now());
+        dispatch(new AlertJob($message . ' ' . now(), 'critical'));
 
         if (App::environment(['staging', 'local'])) {
             return $message;
