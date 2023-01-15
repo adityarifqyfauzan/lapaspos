@@ -40,4 +40,14 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(ProductPrice::class);
     }
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'qty' => 'integer',
+        'total' => 'integer'
+    ];
 }
