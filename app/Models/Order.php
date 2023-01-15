@@ -80,4 +80,13 @@ class Order extends Model
     {
         return $this->belongsToMany(Product::class, 'order_details', 'product_id', 'order_id');
     }
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'order_status_id' => 'integer'
+    ];
 }
