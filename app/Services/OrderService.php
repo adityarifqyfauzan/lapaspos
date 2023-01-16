@@ -14,10 +14,14 @@ class OrderService extends Service implements OrderRepository
     public function findBy($criteria = [], $page, $size) {
 
         $offset = Pagination::getOffset($page, $size);
-        $orders = DB::table('orders')->where(Arr::except($criteria, ["is_today"]))->orderBy("id", "desc");
+        $orders = Order::with('user:id,name', 'outlet:id,name')->where(Arr::except($criteria, ["is_today", "user_id"]))->orderBy("id", "desc");
 
         if (Arr::exists($criteria, "is_today") && $criteria["is_today"]) {
             $orders = $orders->whereDate('created_at', Carbon::today());
+        }
+
+        if (Arr::exists($criteria, "user_id")) {
+            $orders = $orders->whereIn('user_id', (array) $criteria['user_id']);
         }
 
         $orders = $orders->take($size)->offset($offset)->get();
@@ -28,7 +32,7 @@ class OrderService extends Service implements OrderRepository
 
     public function findOneBy($criteria = []) {
 
-        $order = Order::where($criteria)->first();
+        $order = Order::with('user:id,name', 'outlet:id,name')->where($criteria)->first();
         return $order;
 
     }
@@ -55,10 +59,14 @@ class OrderService extends Service implements OrderRepository
     }
 
     public function count($criteria = []): int {
-        $orders = DB::table('orders')->where(Arr::except($criteria, ["is_today"]))->orderBy("id", "desc");
+        $orders = Order::where(Arr::except($criteria, ["is_today", "user_id"]))->orderBy("id", "desc");
 
         if (Arr::exists($criteria, "is_today") && $criteria["is_today"]) {
             $orders = $orders->whereDate('created_at', Carbon::today());
+        }
+
+        if (Arr::exists($criteria, "user_id")) {
+            $orders = $orders->whereIn('user_id', (array) $criteria['user_id']);
         }
 
         $orders = $orders->count();

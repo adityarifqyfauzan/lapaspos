@@ -33,6 +33,10 @@ class UserContext extends Context implements UserContextInterface
             $criteria['slug'] = $request->query('slug');
         }
 
+        if ($request->query('outlet_id') != null) {
+            $criteria['outlet_id'] = $request->query('outlet_id');
+        }
+
         return $criteria;
     }
 
@@ -102,7 +106,7 @@ class UserContext extends Context implements UserContextInterface
 
         $user->name = $request->name;
         $user->role_id = $request->role_id;
-        $user->is_active = ($request->is_active) ? $request->is_active : $user->is_active;
+        $user->outlet_id = $request->outlet_id;
 
         $user = $this->service->update($user);
         if (!$user->process) {

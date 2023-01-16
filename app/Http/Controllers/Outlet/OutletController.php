@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\ProductManagement\Product;
+namespace App\Http\Controllers\Outlet;
 
-use App\Http\Context\Product\ProductContextInterface;
+use App\Http\Context\Outlet\OutletContextInterface;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
-class ProductController extends Controller
+class OutletController extends Controller
 {
-    protected ProductContextInterface $context;
 
-    function __construct(ProductContextInterface $context)
-    {
+    protected OutletContextInterface $context;
+
+    function __construct(OutletContextInterface $context) {
         $this->context = $context;
     }
 
@@ -28,13 +28,7 @@ class ProductController extends Controller
         try {
 
             $resp = $this->context->getBy($request);
-
-            return $this->success(
-                $resp->message,
-                $resp->data,
-                $resp->http_status,
-                $resp->pagination
-            );
+            return $this->success($resp->message, $resp->data, $resp->http_status, $resp->pagination);
 
         } catch (Exception $e) {
             return $this->failed($this->error($e->getMessage()));
@@ -48,7 +42,12 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        try {
+
+
+        } catch (Exception $e) {
+            return $this->failed($this->error($e->getMessage()));
+        }
     }
 
     /**
@@ -62,12 +61,7 @@ class ProductController extends Controller
         try {
 
             $validate = Validator::make($request->all(), [
-                'name' => 'required',
-                'item_unit_id' => 'required|exists:item_units,id',
-                'outlet_id' => 'required|exists:outlets,id',
-                'categories' => 'required',
-                'base_price' => 'required',
-                'margin' => 'required'
+                'name' => 'required'
             ]);
 
             if ($validate->fails()) {
@@ -81,7 +75,6 @@ class ProductController extends Controller
             }
 
             return $this->failed($resp->message, $resp->http_status);
-
 
         } catch (Exception $e) {
             return $this->failed($this->error($e->getMessage()));
@@ -119,7 +112,12 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        try {
+
+
+        } catch (Exception $e) {
+            return $this->failed($this->error($e->getMessage()));
+        }
     }
 
     /**
@@ -134,11 +132,7 @@ class ProductController extends Controller
         try {
 
             $validate = Validator::make($request->all(), [
-                'name' => 'required',
-                'item_unit_id' => 'required',
-                'categories' => 'required',
-                'base_price' => 'required',
-                'margin' => 'required'
+                'name' => 'required'
             ]);
 
             if ($validate->fails()) {
@@ -153,7 +147,6 @@ class ProductController extends Controller
 
             return $this->failed($resp->message, $resp->http_status);
 
-
         } catch (Exception $e) {
             return $this->failed($this->error($e->getMessage()));
         }
@@ -167,6 +160,11 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+
+
+        } catch (Exception $e) {
+            return $this->failed($this->error($e->getMessage()));
+        }
     }
 }

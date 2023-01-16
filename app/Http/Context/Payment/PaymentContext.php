@@ -16,6 +16,7 @@ use App\Repository\ProductStockRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PaymentContext extends Context implements PaymentContextInterface
@@ -98,7 +99,7 @@ class PaymentContext extends Context implements PaymentContextInterface
         try {
 
             // cek order
-            $order = $this->order_service->findOneBy(["id" => $request->order_id]);
+            $order = $this->order_service->findOneBy(["id" => $request->order_id, "outlet_id" => Auth::user()->outlet_id]);
             if (!$order) {
                 return $this->returnContext(
                     Response::HTTP_NOT_FOUND,

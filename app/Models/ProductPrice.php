@@ -36,4 +36,16 @@ class ProductPrice extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'product_id' => 'integer',
+        'base_price' => 'integer',
+        'margin' => 'integer',
+        'final_price' => 'integer'
+    ];
 }

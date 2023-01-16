@@ -9,6 +9,7 @@ use App\Repository\OrderDetailRepository;
 use App\Repository\OrderRepository;
 use App\Repository\OrderStatusHistoryRepository;
 use App\Repository\OrderStatusRepository;
+use App\Repository\OutletRepository;
 use App\Repository\PaymentMethodRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\PaymentStatusHistoryRepository;
@@ -28,6 +29,7 @@ use App\Services\OrderDetailService;
 use App\Services\OrderService;
 use App\Services\OrderStatusHistoryService;
 use App\Services\OrderStatusService;
+use App\Services\OutletService;
 use App\Services\PaymentMethodService;
 use App\Services\PaymentService;
 use App\Services\PaymentStatusHistoryService;
@@ -70,6 +72,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PaymentStatusRepository::class, PaymentStatusService::class);
         $this->app->bind(PaymentStatusHistoryRepository::class, PaymentStatusHistoryService::class);
         $this->app->bind(ReportingRepository::class, ReportingService::class);
+        $this->app->bind(OutletRepository::class, OutletService::class);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -23,6 +24,7 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name',
         'role_id',
+        'outlet_id',
         'username',
         'email',
         'password',
@@ -83,6 +85,16 @@ class User extends Authenticatable implements JWTSubject
     public function login_histories(): HasMany
     {
         return $this->hasMany(LoginHistory::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get the outlet that owns the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function outlet(): BelongsTo
+    {
+        return $this->belongsTo(Outlet::class);
     }
 
     /**

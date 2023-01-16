@@ -1,22 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\ProductManagement\Product;
+namespace App\Http\Controllers\Order;
 
-use App\Http\Context\Product\ProductContextInterface;
+use App\Http\Context\Order\OrderContextInterface;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Validator;
 
-class ProductController extends Controller
+class OrderController extends Controller
 {
-    protected ProductContextInterface $context;
 
-    function __construct(ProductContextInterface $context)
-    {
-        $this->context = $context;
-    }
+    protected OrderContextInterface $context;
 
     /**
      * Display a listing of the resource.
@@ -48,7 +43,12 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        try {
+
+
+        } catch (Exception $e) {
+            return $this->failed($this->error($e->getMessage()));
+        }
     }
 
     /**
@@ -60,27 +60,6 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
-
-            $validate = Validator::make($request->all(), [
-                'name' => 'required',
-                'item_unit_id' => 'required|exists:item_units,id',
-                'outlet_id' => 'required|exists:outlets,id',
-                'categories' => 'required',
-                'base_price' => 'required',
-                'margin' => 'required'
-            ]);
-
-            if ($validate->fails()) {
-                return $this->failed($validate->errors()->first(), Response::HTTP_BAD_REQUEST);
-            }
-
-            $resp = $this->context->store($request);
-
-            if ($resp->http_status == Response::HTTP_CREATED) {
-                return $this->success($resp->message, $resp->data, $resp->http_status);
-            }
-
-            return $this->failed($resp->message, $resp->http_status);
 
 
         } catch (Exception $e) {
@@ -98,13 +77,21 @@ class ProductController extends Controller
     {
         try {
 
-            $resp = $this->context->getById($id);
+            $resp = $this->context->getByID($id);
 
             if ($resp->http_status == Response::HTTP_OK) {
-                return $this->success($resp->message, $resp->data, $resp->http_status);
+                return $this->success(
+                    $resp->message,
+                    $resp->data,
+                    $resp->http_status
+                );
             }
 
-            return $this->failed($resp->message, $resp->http_status);
+            return $this->failed(
+                $resp->message,
+                $resp->data,
+                $resp->http_status
+            );
 
         } catch (Exception $e) {
             return $this->failed($this->error($e->getMessage()));
@@ -119,7 +106,12 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        try {
+
+
+        } catch (Exception $e) {
+            return $this->failed($this->error($e->getMessage()));
+        }
     }
 
     /**
@@ -132,26 +124,6 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-
-            $validate = Validator::make($request->all(), [
-                'name' => 'required',
-                'item_unit_id' => 'required',
-                'categories' => 'required',
-                'base_price' => 'required',
-                'margin' => 'required'
-            ]);
-
-            if ($validate->fails()) {
-                return $this->failed($validate->errors()->first(), Response::HTTP_BAD_REQUEST);
-            }
-
-            $resp = $this->context->update($id, $request);
-
-            if ($resp->http_status == Response::HTTP_OK) {
-                return $this->success($resp->message, $resp->data, $resp->http_status);
-            }
-
-            return $this->failed($resp->message, $resp->http_status);
 
 
         } catch (Exception $e) {
@@ -167,6 +139,11 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+
+
+        } catch (Exception $e) {
+            return $this->failed($this->error($e->getMessage()));
+        }
     }
 }

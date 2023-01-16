@@ -65,6 +65,10 @@ class OrderContext extends Context implements OrderContextInterface
             $criteria['order_status_id'] = $request->query('order_status_id');
         }
 
+        if ($request->query('outlet_id') != null) {
+            $criteria['outlet_id'] = $request->query('outlet_id');
+        }
+
         if ($request->query('start_date') != null) {
             $criteria['start_date'] = $request->query('start_date');
         }
@@ -85,7 +89,11 @@ class OrderContext extends Context implements OrderContextInterface
         $criteria = $this->getCriteria($request);
         $pagination = $this->getPageAndSize($request);
 
-        $criteria["user_id"] = Auth::user()->id;
+        $user = Auth::user();
+
+        if ($user->role_id != config('constants.roles.admin')) {
+            $criteria["user_id"] = $user->id;
+        }
 
         $orders = $this->order_service->findBy($criteria, $pagination->page, $pagination->size);
 
@@ -99,13 +107,21 @@ class OrderContext extends Context implements OrderContextInterface
             $order_status = $this->order_status_service->findOneBy(["id" => $order->order_status_id]);
 
             $result[] = [
-                "id" => $order->id,
+                "id" => (int) $order->id,
                 "order_code" => $order->code,
                 "order_date" => $order->created_at,
-                "order_status_id" => $order->order_status_id,
+                "order_status_id" => (int) $order->order_status_id,
                 "order_status" => $order_status->name,
                 "product_qty" => $qty,
-                "total_amount" => $total
+                "total_amount" => $total,
+                "cashier" => [
+                    "id" => $order->user->id,
+                    "name" => $order->user->name
+                ],
+                "outlet" => [
+                    "id" => $order->outlet->id,
+                    "name" => $order->outlet->name
+                ]
             ];
 
         }
@@ -175,6 +191,9 @@ class OrderContext extends Context implements OrderContextInterface
         $result["paid"] = 0;
         $result["change"] = 0;
 
+        // outlet info
+        $result["outlet_name"] = $order->outlet->name;
+
         $payment = $this->payment_service->findOneBy(["order_id" => $order->id]);
         if ($payment) {
             $result["paid"] = $payment->paid;
@@ -236,6 +255,8 @@ class OrderContext extends Context implements OrderContextInterface
 
             $product_collect = [];
 
+            $outlet_id = Auth::user()->outlet_id;
+
             // create order detail
             foreach ($products as $value) {
 
@@ -243,7 +264,7 @@ class OrderContext extends Context implements OrderContextInterface
                 $value = (object) $value;
 
                 // cek product nya
-                $product = $this->product_service->findOneBy(["id" => $value->product_id]);
+                $product = $this->product_service->findOneBy(["id" => $value->product_id, "outlet_id" => $outlet_id]);
                     if (!$product) {
                     DB::rollback();
                     return $this->returnContext(
@@ -395,7 +416,7 @@ class OrderContext extends Context implements OrderContextInterface
     {
         try {
 
-            $order = $this->order_service->findOneBy(["id" => $id]);
+            $order = $this->order_service->findOneBy(["id" => $id, "outlet_id" => Auth::user()->outlet_id]);
             if (!$order) {
                 return $this->returnContext(
                     Response::HTTP_NOT_FOUND,
