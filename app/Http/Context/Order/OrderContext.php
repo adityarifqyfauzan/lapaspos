@@ -99,10 +99,10 @@ class OrderContext extends Context implements OrderContextInterface
             $order_status = $this->order_status_service->findOneBy(["id" => $order->order_status_id]);
 
             $result[] = [
-                "id" => $order->id,
+                "id" => (int) $order->id,
                 "order_code" => $order->code,
                 "order_date" => $order->created_at,
-                "order_status_id" => $order->order_status_id,
+                "order_status_id" => (int) $order->order_status_id,
                 "order_status" => $order_status->name,
                 "product_qty" => $qty,
                 "total_amount" => $total
