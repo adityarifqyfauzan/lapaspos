@@ -46,6 +46,9 @@ class Product extends Model
     protected $casts = [
         'have_stock' => 'boolean',
         'is_active' => 'boolean',
+        'created_by' => 'integer',
+        'outlet_id' => 'integer',
+        'item_unit_id' => 'integer',
     ];
 
     /**
