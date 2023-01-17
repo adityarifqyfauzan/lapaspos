@@ -3,6 +3,8 @@
 namespace App\Http\Context\Auth;
 
 use App\Http\Context\Context;
+use App\Jobs\SendEmailJob;
+use App\Mail\ForgotPassword;
 use App\Models\LoginHistory;
 use App\Repository\LoginHistoryRepository;
 use App\Repository\RoleRepository;
@@ -11,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class AuthContext extends Context implements AuthContextInterface
 {
@@ -86,6 +90,37 @@ class AuthContext extends Context implements AuthContextInterface
     public function logout(Request $request) {
         Auth::logout();
         return $this->returnContext(Response::HTTP_OK, config('messages.auth.logout.success'));
+    }
+
+    public function forgotPassword(Request $request) {
+
+        // find user by email
+        $user = $this->user_service->findOneBy(["email" => $request->email]);
+        if (!$user) {
+            return $this->returnContext(
+                Response::HTTP_NOT_FOUND,
+                config('messages.general.not_found') . ' Email tidak terdaftar'
+            );
+        }
+
+        $new_password = strtoupper(Str::random(6));
+
+        $user->password = $new_password;
+        $user = $this->user_service->update($user);
+        if (!$user->process) {
+            return $this->returnContext(
+                Response::HTTP_UNPROCESSABLE_ENTITY,
+                config('messages.general.error')
+            );
+        }
+
+        dispatch(new SendEmailJob($user->data->email, new ForgotPassword($new_password)));
+
+        return $this->returnContext(
+            Response::HTTP_OK,
+            'Permintaan berhasil diproses, periksa email Anda!'
+        );
+
     }
 
 }
