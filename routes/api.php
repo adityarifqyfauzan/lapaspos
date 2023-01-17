@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Cashier\Category\CategoryListController;
 use App\Http\Controllers\Cashier\Order\OrderController;
 use App\Http\Controllers\Cashier\OrderStatus\OrderStatusController;
@@ -44,6 +45,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/forgot-password', ForgotPasswordController::class);
 
 Route::middleware(['auth:api'])->group(function () {
 
