@@ -53,7 +53,8 @@ trait ResponseFormatter
      */
     public function failed($message, $code = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
-        dispatch(new AlertJob($message . "[" . $code . "]" . " | " . now(), 'alert'));
+        // dispatch(new AlertJob($message . "[" . $code . "]" . " | " . now(), 'alert'));
+        // Log::alert($message . "[" . $code . "]" . " | " . now());
 
         return response()->json([
             "message" => $message
@@ -86,7 +87,8 @@ trait ResponseFormatter
     public function error($message)
     {
 
-        dispatch(new AlertJob($message . ' ' . now(), 'critical'));
+        // dispatch(new AlertJob($message . ' ' . now(), 'critical'));
+        Log::critical($message . ' ' . now());
 
         if (App::environment(['staging', 'local'])) {
             return $message;
