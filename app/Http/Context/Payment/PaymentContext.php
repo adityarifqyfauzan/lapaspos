@@ -183,7 +183,7 @@ class PaymentContext extends Context implements PaymentContextInterface
                     "previous_status" => $previous_order_status
                 ];
 
-                dispatch(new OrderStatusHistoryJob((object)$payload_order_history));
+                dispatch(new OrderStatusHistoryJob((object)$payload_order_history))->afterCommit();
 
             }
 
@@ -193,7 +193,7 @@ class PaymentContext extends Context implements PaymentContextInterface
                 "previous_status" => $payment->data->payment_status_id
             ];
 
-            dispatch(new PaymentStatusHistoryJob((object) $payload_payment_history));
+            dispatch(new PaymentStatusHistoryJob((object) $payload_payment_history))->afterCommit();
 
             DB::commit();
 

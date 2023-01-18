@@ -366,7 +366,7 @@ class OrderContext extends Context implements OrderContextInterface
                 "previous_status" => 1
             ];
 
-            dispatch(new OrderStatusHistoryJob((object) $payload_history));
+            dispatch(new OrderStatusHistoryJob((object) $payload_history))->afterCommit();
 
             // update product stock
             // get order detail
@@ -378,7 +378,8 @@ class OrderContext extends Context implements OrderContextInterface
                     "product_id" => $value->product_id,
                     "supplier_id" => 1,
                     "stock" => $value->qty,
-                    "status" => "sale"
+                    "status" => "sale",
+                    "created_by" => Auth::user()->id
                 ];
 
                 $order_result[] = [
@@ -387,7 +388,7 @@ class OrderContext extends Context implements OrderContextInterface
                     "subtotal" => $value->total
                 ];
             }
-            dispatch(new ProductStockUpdateJob((object)$payload_product_stock));
+            dispatch(new ProductStockUpdateJob((object)$payload_product_stock))->afterCommit();
 
             DB::commit();
             return $this->returnContext(
@@ -460,7 +461,7 @@ class OrderContext extends Context implements OrderContextInterface
                 "previous_status" => $previous_order_status
             ];
 
-            dispatch(new OrderStatusHistoryJob((object)$payload_order_history));
+            dispatch(new OrderStatusHistoryJob((object)$payload_order_history))->afterCommit();
 
             // update product stock
             // get order detail
@@ -472,11 +473,12 @@ class OrderContext extends Context implements OrderContextInterface
                     "product_id" => $value->product_id,
                     "supplier_id" => 1,
                     "stock" => $value->qty,
-                    "status" => "order_cancel"
+                    "status" => "order_cancel",
+                    "created_by" => Auth::user()->id
                 ];
             }
 
-            dispatch(new ProductStockUpdateJob((object)$payload_product_stock));
+            dispatch(new ProductStockUpdateJob((object)$payload_product_stock))->afterCommit();
 
             return $this->returnContext(
                 Response::HTTP_OK,

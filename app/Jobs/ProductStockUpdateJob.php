@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ProductStockUpdateJob implements ShouldQueue
 {
@@ -38,12 +39,16 @@ class ProductStockUpdateJob implements ShouldQueue
         foreach ($payload as $value) {
             $product = Product::find($value['product_id']);
             if ($product->have_stock) {
-                ProductStock::create([
+                if(!ProductStock::create([
                     "product_id" => $value['product_id'],
                     "supplier_id" => $value['supplier_id'],
                     "stock" => $value['stock'],
                     "status" => $value['status'],
-                ]);
+                    "created_by" => $value['created_by']
+                ])){
+                    Log::critical("unable to create product stock on queue", $value);
+                    return;
+                }
             }
         }
     }
