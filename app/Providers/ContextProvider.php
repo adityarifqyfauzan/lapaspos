@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Context\Activity\ActivityContext;
+use App\Http\Context\Activity\ActivityContextInterface;
 use App\Http\Context\Auth\AuthContext;
 use App\Http\Context\Auth\AuthContextInterface;
 use App\Http\Context\Category\CategoryContext;
@@ -52,6 +54,7 @@ class ContextProvider extends ServiceProvider
         $this->app->bind(ReportingContextInterface::class, ReportingContext::class);
         $this->app->bind(OrderStatusContextInterface::class, OrderStatusContext::class);
         $this->app->bind(OutletContextInterface::class, OutletContext::class);
+        $this->app->bind(ActivityContextInterface::class, ActivityContext::class);
     }
 
     /**

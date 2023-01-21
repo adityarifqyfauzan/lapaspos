@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Activity\ActivityController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Cashier\Category\CategoryListController;
 use App\Http\Controllers\Cashier\Order\OrderController;
@@ -44,6 +45,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/activity', ActivityController::class);
 
 Route::middleware(['auth:api'])->group(function () {
 

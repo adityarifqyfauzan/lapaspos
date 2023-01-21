@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repository\ActivityRepository;
 use App\Repository\CategoryRepository;
 use App\Repository\ItemUnitRepository;
 use App\Repository\LoginHistoryRepository;
@@ -22,6 +23,7 @@ use App\Repository\ReportingRepository;
 use App\Repository\SupplierRepository;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
+use App\Services\ActivityService;
 use App\Services\CategoryService;
 use App\Services\ItemUnitService;
 use App\Services\LoginHistoryService;
@@ -73,6 +75,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PaymentStatusHistoryRepository::class, PaymentStatusHistoryService::class);
         $this->app->bind(ReportingRepository::class, ReportingService::class);
         $this->app->bind(OutletRepository::class, OutletService::class);
+        $this->app->bind(ActivityRepository::class, ActivityService::class);
     }
 
     /**

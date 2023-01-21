@@ -2,6 +2,7 @@
 
 namespace App\Http\Context\Product;
 
+use App\Helper\Activity;
 use App\Helper\ProductStockHelper;
 use App\Http\Context\Context;
 use App\Models\Product;
@@ -203,6 +204,13 @@ class ProductContext extends Context implements ProductContextInterface
             }
         }
 
+        // set activity
+        Activity::payload(
+            Auth::user()->id,
+            config('constants.activity_purpose.create'),
+            '['.config('constants.activity.product').'] Berhasil membuat produk '. $product->data->name
+        );
+
         DB::commit();
         return $this->returnContext(Response::HTTP_CREATED, config('messages.general.created'));
 
@@ -253,6 +261,13 @@ class ProductContext extends Context implements ProductContextInterface
                 return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', gagal memperbarui produk');
             }
 
+            // set activity
+            Activity::payload(
+                Auth::user()->id,
+                config('constants.activity_purpose.update'),
+                '['.config('constants.activity.product').'] Memperbarui data produk '. $product->data->name
+            );
+
             $product_price = $this->product_price_service->findOneBy(["product_id" => $product->data->id]);
 
             if (!$product_price) {
@@ -276,6 +291,14 @@ class ProductContext extends Context implements ProductContextInterface
                     DB::rollBack();
                     return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', gagal memperbarui produk: [product-price]');
                 }
+
+                // set activity
+                Activity::payload(
+                    Auth::user()->id,
+                    config('constants.activity_purpose.update'),
+                    '['.config('constants.activity.product').'] Memperbarui harga produk '. $product->data->name
+                );
+
             }
 
             /**
@@ -296,7 +319,6 @@ class ProductContext extends Context implements ProductContextInterface
                     DB::rollBack();
                     return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', gagal memperbarui produk: terjadi kesalahan saat memperbarui kategori');
                 }
-
             }
 
             DB::commit();
@@ -317,11 +339,20 @@ class ProductContext extends Context implements ProductContextInterface
             return $this->returnContext(Response::HTTP_NOT_FOUND, config('messages.general.not_found'));
         }
 
+        $old_product_status = $product->is_active;
+
         $product->is_active = ($product->is_active) ? false : true;
         $product = $this->product_service->update($product);
         if (!$product->process) {
             return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error'). '. gagal memperbarui status produk');
         }
+
+        // set activity
+        Activity::payload(
+            Auth::user()->id,
+            config('constants.activity_purpose.update'),
+            '['.config('constants.activity.product').'] Mengubah status produk '. $product->data->name .' dari '. ($old_product_status ? 'aktif' : 'tidak aktif') .' menjadi ' . ($product->data->is_active ? 'aktif' : 'tidak aktif')
+        );
 
         return $this->returnContext(Response::HTTP_OK, config('messages.general.updated'));
     }

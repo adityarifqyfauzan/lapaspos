@@ -2,11 +2,13 @@
 
 namespace App\Http\Context\ItemUnit;
 
+use App\Helper\Activity;
 use App\Http\Context\Context;
 use App\Models\ItemUnit;
 use App\Repository\ItemUnitRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ItemUnitContext extends Context implements ItemUnitContextInterface
@@ -75,6 +77,14 @@ class ItemUnitContext extends Context implements ItemUnitContextInterface
         $resp = $this->service->create(new ItemUnit($request->all()));
 
         if ($resp->process) {
+
+            // set activity
+            Activity::payload(
+                Auth::user()->id,
+                config('constants.activity_purpose.create'),
+                '['.config('constants.activity.item_unit').'] Berhasil membuat satuan '. $resp->data->name
+            );
+
             return $this->returnContext(Response::HTTP_CREATED, config('messages.general.created'));
         }
 
@@ -94,6 +104,8 @@ class ItemUnitContext extends Context implements ItemUnitContextInterface
          */
         if ($item_unit) {
 
+            $old_item_unit_name = $item_unit->name;
+
             /**
              * bagian ini digunakan untuk cek apakah nama Satuan yang baru
              * sebelumnya sudah dipakai oleh data lain
@@ -112,6 +124,14 @@ class ItemUnitContext extends Context implements ItemUnitContextInterface
             $update = $this->service->update($item_unit);
 
             if ($update->process) {
+
+                // set activity
+                Activity::payload(
+                    Auth::user()->id,
+                    config('constants.activity_purpose.update'),
+                    '['.config('constants.activity.item_unit').'] Mengubah nama satuan '. $old_item_unit_name .' menjadi ' . $request->name
+                );
+
                 return $this->returnContext(Response::HTTP_OK, config('messages.general.updated'));
             }
 
@@ -127,11 +147,21 @@ class ItemUnitContext extends Context implements ItemUnitContextInterface
 
         if ($item_unit) {
 
+            $old_item_unit_status = $item_unit->is_active;
+
             $item_unit->is_active = ($item_unit->is_active) ? false : true;
 
             $update = $this->service->update($item_unit);
 
             if ($update->process) {
+
+                // set activity
+                Activity::payload(
+                    Auth::user()->id,
+                    config('constants.activity_purpose.update'),
+                    '['.config('constants.activity.item_unit').'] Mengubah status satuan '. $item_unit->name .' dari '. ($old_item_unit_status ? 'aktif' : 'tidak aktif') .' menjadi ' . ($update->data->is_active ? 'aktif' : 'tidak aktif')
+                );
+
                 return $this->returnContext(Response::HTTP_OK, config('messages.general.updated'));
             }
 

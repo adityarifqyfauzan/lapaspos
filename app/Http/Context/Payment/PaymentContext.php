@@ -2,6 +2,7 @@
 
 namespace App\Http\Context\Payment;
 
+use App\Helper\Activity;
 use App\Http\Context\Context;
 use App\Jobs\OrderStatusHistoryJob;
 use App\Jobs\PaymentStatusHistoryJob;
@@ -196,6 +197,13 @@ class PaymentContext extends Context implements PaymentContextInterface
             dispatch(new PaymentStatusHistoryJob((object) $payload_payment_history));
 
             DB::commit();
+
+            // set activity
+            Activity::payload(
+                Auth::user()->id,
+                config('constants.activity_purpose.create'),
+                '['.config('constants.activity.payment').'] Berhasil melakukan pembayaran untuk pesanan '. $order->data->code
+            );
 
             return $this->returnContext(
                 Response::HTTP_CREATED,
