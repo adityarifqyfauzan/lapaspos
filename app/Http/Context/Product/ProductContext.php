@@ -129,11 +129,18 @@ class ProductContext extends Context implements ProductContextInterface
             return $this->returnContext(Response::HTTP_NOT_FOUND, config('messages.general.not_found'));
         }
 
+        // item unit
+        $item_unit = $this->item_unit_service->findOneBy(["id" => $product->item_unit_id]);
+        if (!$item_unit) {
+            return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', Produk tidak memiliki satuan!');
+        }
+
         // product helper
         $product_stock_helper = new ProductStockHelper($this->product_stock_service);
 
         $stock = $product_stock_helper->getProductStock($product->id);
         $product = Arr::add($product, "stock", (int) $stock);
+        $product = Arr::add($product, "item_unit_name", $item_unit->name);
 
         return $this->returnContext(Response::HTTP_OK, config('messages.general.found'), $product);
 
