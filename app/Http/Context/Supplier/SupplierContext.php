@@ -2,11 +2,13 @@
 
 namespace App\Http\Context\Supplier;
 
+use App\Helper\Activity;
 use App\Http\Context\Context;
 use App\Models\Supplier;
 use App\Repository\SupplierRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class SupplierContext extends Context implements SupplierContextInterface
@@ -75,6 +77,14 @@ class SupplierContext extends Context implements SupplierContextInterface
         $resp = $this->service->create(new Supplier($request->all()));
 
         if ($resp->process) {
+
+            // set activity
+            Activity::payload(
+                Auth::user()->id,
+                config('constants.activity_purpose.create'),
+                '['.config('constants.activity.supplier').'] Berhasil membuat pemasok '. $resp->data->name
+            );
+
             return $this->returnContext(Response::HTTP_CREATED, config('messages.general.created'));
         }
 
@@ -93,6 +103,8 @@ class SupplierContext extends Context implements SupplierContextInterface
          * cek apakah Supplier tersebut ada atau tidak
          */
         if ($supplier) {
+
+            $old_supplier_name = $supplier->name;
 
             /**
              * bagian ini digunakan untuk cek apakah nama Supplier yang baru
@@ -113,6 +125,14 @@ class SupplierContext extends Context implements SupplierContextInterface
             $update = $this->service->update($supplier);
 
             if ($update->process) {
+
+                // set activity
+                Activity::payload(
+                    Auth::user()->id,
+                    config('constants.activity_purpose.update'),
+                    '['.config('constants.activity.supplier').'] Mengubah nama pemasok '. $old_supplier_name .' menjadi ' . $request->name
+                );
+
                 return $this->returnContext(Response::HTTP_OK, config('messages.general.updated'));
             }
 
@@ -128,11 +148,21 @@ class SupplierContext extends Context implements SupplierContextInterface
 
         if ($supplier) {
 
+            $old_supplier_status = $supplier->is_active;
+
             $supplier->is_active = ($supplier->is_active) ? false : true;
 
             $update = $this->service->update($supplier);
 
             if ($update->process) {
+
+                // set activity
+                Activity::payload(
+                    Auth::user()->id,
+                    config('constants.activity_purpose.update'),
+                    '['.config('constants.activity.supplier').'] Mengubah status pemasok '. $update->data->name .' dari '. ($old_supplier_status ? 'aktif' : 'tidak aktif') .' menjadi ' . ($update->data->is_active ? 'aktif' : 'tidak aktif')
+                );
+
                 return $this->returnContext(Response::HTTP_OK, config('messages.general.updated'));
             }
 

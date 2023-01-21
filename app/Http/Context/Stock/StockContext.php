@@ -2,6 +2,7 @@
 
 namespace App\Http\Context\Stock;
 
+use App\Helper\Activity;
 use App\Http\Context\Context;
 use App\Models\ProductStock;
 use App\Repository\ProductRepository;
@@ -9,6 +10,7 @@ use App\Repository\ProductStockRepository;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class StockContext extends Context implements StockContextInterface
 {
@@ -102,6 +104,13 @@ class StockContext extends Context implements StockContextInterface
         if (!$product_stock->process) {
             return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ' gagal membuat stock');
         }
+
+        Activity::payload(
+            Auth::user()->id,
+            config('constants.activity_purpose.create'),
+            '['.config('constants.activity.stock_in').'] Berhasil melakukan pembelian untuk produk '. $product->name . ' sebanyak '. $product_stock->data->stock
+        );
+
         return $this->returnContext(Response::HTTP_CREATED, config('messages.general.created'));
     }
 
@@ -144,6 +153,14 @@ class StockContext extends Context implements StockContextInterface
 
         $product_stock = $this->product_stock_service->delete($product_stock);
         if (!$product_stock->process) {
+
+            // set activity
+            Activity::payload(
+                Auth::user()->id,
+                config('constants.activity_purpose.delete'),
+                '['.config('constants.activity.stock_in').'] Menghapus pembelian '. $product_stock->id
+            );
+
             return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error'). ' gagal menghapus stock');
         }
 

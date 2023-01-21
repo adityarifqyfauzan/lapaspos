@@ -2,11 +2,13 @@
 
 namespace App\Http\Context\Outlet;
 
+use App\Helper\Activity;
 use App\Http\Context\Context;
 use App\Models\Outlet;
 use App\Repository\OutletRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class OutletContext extends Context implements OutletContextInterface
@@ -70,6 +72,14 @@ class OutletContext extends Context implements OutletContextInterface
 
         $outlet = $this->service->create(new Outlet($request->all()));
         if (!$outlet->process) {
+
+            // set activity
+            Activity::payload(
+                Auth::user()->id,
+                config('constants.activity_purpose.create'),
+                '['.config('constants.activity.outlet').'] Berhasil membuat outlet '. $outlet->data->name
+            );
+
             return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ' gagal menambahkan role');
         }
 
@@ -81,6 +91,8 @@ class OutletContext extends Context implements OutletContextInterface
         if (!$outlet) {
             return $this->returnContext(Response::HTTP_NOT_FOUND, config('messages.general.not_found'));
         }
+
+        $old_outlet_name = $outlet->name;
 
         $check = $this->service->findOneBy(["slug" => Str::slug($request->name)]);
         if ($check) {
@@ -95,6 +107,13 @@ class OutletContext extends Context implements OutletContextInterface
             return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ' gagal memperbarui outlet');
         }
 
+        // set activity
+        Activity::payload(
+            Auth::user()->id,
+            config('constants.activity_purpose.update'),
+            '['.config('constants.activity.outlet').'] Mengubah nama outlet '. $old_outlet_name .' menjadi ' . $request->name
+        );
+
         return $this->returnContext(Response::HTTP_OK, config('messages.general.updated'));
     }
 
@@ -105,11 +124,20 @@ class OutletContext extends Context implements OutletContextInterface
             return $this->returnContext(Response::HTTP_NOT_FOUND, config('messages.general.not_found'));
         }
 
+        $old_outlet_status = $outlet->is_active;
+
         $outlet->is_active = ($outlet->is_active) ? false : true;
         $update = $this->service->update($outlet);
         if (!$update->process) {
             return $this->returnContext(Response::HTTP_UNPROCESSABLE_ENTITY, config('messages.general.error') . ', gagal memperbarui outlet');
         }
+
+        // set activity
+        Activity::payload(
+            Auth::user()->id,
+            config('constants.activity_purpose.update'),
+            '['.config('constants.activity.category').'] Mengubah status kategori '. $update->data->name .' dari '. ($old_outlet_status ? 'aktif' : 'tidak aktif') .' menjadi ' . ($update->data->is_active ? 'aktif' : 'tidak aktif')
+        );
 
         return $this->returnContext(Response::HTTP_OK, config('messages.general.updated'));
     }

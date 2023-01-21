@@ -11,7 +11,7 @@ class ActivityService extends Service implements ActivityRepository
 {
     public function findBy($criteria = [], $page, $size) {
         $offset = Pagination::getOffset($page, $size);
-        $activities = Activity::where(Arr::only($criteria, ["user_id"]))->offset($offset)->take($size)->get();
+        $activities = Activity::where(Arr::only($criteria, ["user_id"]))->orderBy('id', 'desc')->offset($offset)->take($size)->get();
 
         return $activities;
     }
@@ -30,4 +30,7 @@ class ActivityService extends Service implements ActivityRepository
         return $this->serviceReturn(false);
     }
 
+    public function count($criteria = []): int {
+        return Activity::where(Arr::only($criteria, ["user_id"]))->count();
+    }
 }

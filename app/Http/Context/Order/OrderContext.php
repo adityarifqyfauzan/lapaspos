@@ -2,6 +2,7 @@
 
 namespace App\Http\Context\Order;
 
+use App\Helper\Activity;
 use App\Helper\ProductStockHelper;
 use App\Http\Context\Context;
 use App\Jobs\OrderStatusHistoryJob;
@@ -390,6 +391,12 @@ class OrderContext extends Context implements OrderContextInterface
             }
             dispatch(new ProductStockUpdateJob((object)$payload_product_stock))->afterCommit();
 
+            Activity::payload(
+                Auth::user()->id,
+                config('constants.activity_purpose.create'),
+                '['.config('constants.activity.order').'] Berhasil membuat pesanan '. $order->data->code
+            );
+
             DB::commit();
             return $this->returnContext(
                 Response::HTTP_CREATED,
@@ -479,6 +486,12 @@ class OrderContext extends Context implements OrderContextInterface
             }
 
             dispatch(new ProductStockUpdateJob((object)$payload_product_stock))->afterCommit();
+
+            Activity::payload(
+                Auth::user()->id,
+                config('constants.activity_purpose.update'),
+                '['.config('constants.activity.order').'] Berhasil membatalkan pesanan '. $order->data->code
+            );
 
             return $this->returnContext(
                 Response::HTTP_OK,

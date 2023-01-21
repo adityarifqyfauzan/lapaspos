@@ -26,5 +26,34 @@ return [
 
     'payment_method' => [
         'tunai' => 'tunai'
+    ],
+
+    'activity' => [
+        'category' => 'kategori',
+        'item_unit' => 'satuan',
+        'order' => 'pesanan',
+        'outlet' => 'outlet',
+        'payment' => 'pembayaran',
+        'product' => 'produk',
+        'reporting' => 'laporan',
+        'role' => 'role',
+        'stock_in' => 'pembelian',
+        'supplier' => 'pemasok',
+        'user' => 'pengguna'
+    ],
+
+    'activity_purpose' => [
+        'create' => 'create',
+        'update' => 'update',
+        'delete' => 'delete'
+    ],
+
+    'stock_status' => [
+        'in' => 'in',
+        'out' => 'out',
+        'sale' => 'sale',
+        'return' => 'return',
+        'opname' => 'opname',
+        'order_cancel' => 'order_cancel'
     ]
 ];

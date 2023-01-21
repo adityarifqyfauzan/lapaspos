@@ -2,6 +2,7 @@
 
 namespace App\Http\Context\User;
 
+use App\Helper\Activity;
 use App\Http\Context\Context;
 use App\Models\User;
 use App\Repository\UserRepository;
@@ -88,6 +89,13 @@ class UserContext extends Context implements UserContextInterface
             );
         }
 
+        // set activity
+        Activity::payload(
+            Auth::user()->id,
+            config('constants.activity_purpose.create'),
+            '['.config('constants.activity.user').'] Berhasil menambahkan user '. $user->data->name
+        );
+
         return $this->returnContext(
             Response::HTTP_CREATED,
             config('messages.general.created')
@@ -116,6 +124,13 @@ class UserContext extends Context implements UserContextInterface
             );
         }
 
+        // set activity
+        Activity::payload(
+            Auth::user()->id,
+            config('constants.activity_purpose.update'),
+            '['.config('constants.activity.user').'] Memperbarui data user '. $user->data->name
+        );
+
         return $this->returnContext(
             Response::HTTP_OK,
             config('messages.general.updated')
@@ -132,6 +147,8 @@ class UserContext extends Context implements UserContextInterface
             );
         }
 
+        $old_user_status = $user->is_active;
+
         $user->is_active = ($user->is_active) ? false : true;
         $user = $this->service->update($user);
         if (!$user->process) {
@@ -140,6 +157,13 @@ class UserContext extends Context implements UserContextInterface
                 config('messages.general.error') . ' gagal memperbarui status'
             );
         }
+
+        // set activity
+        Activity::payload(
+            Auth::user()->id,
+            config('constants.activity_purpose.update'),
+            '['.config('constants.activity.user').'] Mengubah status user '. $user->data->name .' dari '. ($old_user_status ? 'aktif' : 'tidak aktif') .' menjadi ' . ($user->data->is_active ? 'aktif' : 'tidak aktif')
+        );
 
         return $this->returnContext(
             Response::HTTP_OK,

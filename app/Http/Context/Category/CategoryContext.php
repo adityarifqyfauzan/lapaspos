@@ -2,11 +2,13 @@
 
 namespace App\Http\Context\Category;
 
+use App\Helper\Activity;
 use App\Http\Context\Context;
 use App\Models\Category;
 use App\Repository\CategoryRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CategoryContext extends Context implements CategoryContextInterface
@@ -75,6 +77,14 @@ class CategoryContext extends Context implements CategoryContextInterface
         $resp = $this->category_service->create(new Category($request->all()));
 
         if ($resp->process) {
+
+            // set activity
+            Activity::payload(
+                Auth::user()->id,
+                config('constants.activity_purpose.create'),
+                '['.config('constants.activity.category').'] Berhasil membuat kategori '. $resp->data->name
+            );
+
             return $this->returnContext(Response::HTTP_CREATED, config('messages.general.created'));
         }
 
@@ -94,6 +104,8 @@ class CategoryContext extends Context implements CategoryContextInterface
          */
         if ($category->data) {
 
+            $old_category_name = $category->data->name;
+
             /**
              * bagian ini digunakan untuk cek apakah nama kategori yang baru
              * sebelumnya sudah dipakai oleh data lain
@@ -112,6 +124,13 @@ class CategoryContext extends Context implements CategoryContextInterface
             $update = $this->category_service->update($category->data);
 
             if ($update->process) {
+                // set activity
+                Activity::payload(
+                    Auth::user()->id,
+                    config('constants.activity_purpose.update'),
+                    '['.config('constants.activity.category').'] Mengubah nama kategori '. $old_category_name .' menjadi ' . $request->name
+                );
+
                 return $this->returnContext(Response::HTTP_OK, config('messages.general.updated'));
             }
 
@@ -128,11 +147,21 @@ class CategoryContext extends Context implements CategoryContextInterface
 
         if ($category->data) {
 
+            $old_category_status = $category->data->is_active;
+
             $category->data->is_active = ($category->data->is_active) ? false : true;
 
             $update = $this->category_service->update($category->data);
 
             if ($update->process) {
+
+                // set activity
+                Activity::payload(
+                    Auth::user()->id,
+                    config('constants.activity_purpose.update'),
+                    '['.config('constants.activity.category').'] Mengubah status kategori '. $category->data->name .' dari '. ($old_category_status ? 'aktif' : 'tidak aktif') .' menjadi ' . ($update->data->is_active ? 'aktif' : 'tidak aktif')
+                );
+
                 return $this->returnContext(Response::HTTP_OK, config('messages.general.updated'));
             }
 
