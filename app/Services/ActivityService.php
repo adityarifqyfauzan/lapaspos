@@ -11,13 +11,13 @@ class ActivityService extends Service implements ActivityRepository
 {
     public function findBy($criteria = [], $page, $size) {
         $offset = Pagination::getOffset($page, $size);
-        $activities = Activity::where(Arr::only($criteria, ["user_id"]))->orderBy('id', 'desc')->offset($offset)->take($size)->get();
+        $activities = Activity::with('user:id,name')->where(Arr::only($criteria, ["user_id"]))->orderBy('id', 'desc')->offset($offset)->take($size)->get();
 
         return $activities;
     }
 
     public function findOneBy($criteria = []) {
-        $activity = Activity::where(Arr::only($criteria, ["user_id"]))->first();
+        $activity = Activity::with('user:id,name')->where(Arr::only($criteria, ["user_id"]))->first();
 
         return $activity;
     }
