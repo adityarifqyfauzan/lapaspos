@@ -20,7 +20,7 @@ class ProductStock extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->created_by = Auth::id();
+            $model->created_by = (Auth::check()) ? Auth::user()->id : $model->created_by;
         });
     }
 
