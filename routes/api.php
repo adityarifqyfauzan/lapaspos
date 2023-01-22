@@ -18,6 +18,7 @@ use App\Http\Controllers\ProductManagement\Category\CategoryController;
 use App\Http\Controllers\ProductManagement\Category\CategoryStatusController;
 use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitController;
 use App\Http\Controllers\ProductManagement\ItemUnit\ItemUnitStatusController;
+use App\Http\Controllers\ProductManagement\Product\ProductBulkInsertController;
 use App\Http\Controllers\ProductManagement\Product\ProductController;
 use App\Http\Controllers\ProductManagement\Product\ProductStatusController;
 use App\Http\Controllers\ProductManagement\Stock\StockInController;
@@ -69,6 +70,7 @@ Route::middleware(['auth:api'])->group(function () {
 
             Route::resource('product', ProductController::class);
             Route::put('product/status/{id}', ProductStatusController::class);
+            Route::post('product/import-bulk', ProductBulkInsertController::class);
 
             Route::prefix('stock')->group(function () {
 

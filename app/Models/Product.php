@@ -28,7 +28,7 @@ class Product extends Model
         static::creating(function ($model) {
             $model->product_code = Generator::virtualProductCode();
             $model->slug = Str::slug($model->name) . '-' . $model->outlet_id;
-            $model->created_by = Auth::id();
+            $model->created_by = (Auth::check()) ? Auth::user()->id : $model->created_by;
         });
 
         static::updating(function ($model) {

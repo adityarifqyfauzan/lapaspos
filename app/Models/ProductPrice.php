@@ -20,7 +20,7 @@ class ProductPrice extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->created_by = Auth::id();
+            $model->created_by = (Auth::check()) ? Auth::user()->id : $model->created_by;
             $model->final_price = $model->base_price + $model->margin;
         });
     }
