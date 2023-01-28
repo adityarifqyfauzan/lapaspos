@@ -13,7 +13,6 @@ class OrderService extends Service implements OrderRepository
 {
     public function findBy($criteria = [], $page, $size) {
 
-        $offset = Pagination::getOffset($page, $size);
         $orders = Order::with('user:id,name', 'outlet:id,name')->where(Arr::except($criteria, ["is_today", "user_id"]))->orderBy("id", "desc");
 
         if (Arr::exists($criteria, "is_today") && $criteria["is_today"]) {
@@ -24,7 +23,12 @@ class OrderService extends Service implements OrderRepository
             $orders = $orders->whereIn('user_id', (array) $criteria['user_id']);
         }
 
-        $orders = $orders->take($size)->offset($offset)->get();
+        if ($page != 0 && $size != 0) {
+            $offset = Pagination::getOffset($page, $size);
+            $orders = $orders->take($size)->offset($offset)->get();
+        } else {
+            $orders = $orders->get();
+        }
 
         return $orders;
 
