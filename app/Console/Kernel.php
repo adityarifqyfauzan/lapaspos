@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('telescope:prune --hours=48')->daily();
-        $schedule->command('order:cancel')->dailyAt('23:59')->timezone('Asia/Jakarta');
+        $schedule->command('order:cancel')->dailyAt('00:00')->timezone('Asia/Jakarta');
     }
 
     /**
