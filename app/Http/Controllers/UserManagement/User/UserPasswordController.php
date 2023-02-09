@@ -25,6 +25,12 @@ class UserPasswordController extends Controller
                 'old_password' => 'required',
                 'new_password' => 'required|min:6',
                 'password_confirmation' => 'required|same:new_password'
+            ], [
+                'old_password.required' => 'Password lama harus diisi',
+                'new_password.required' => 'Password baru harus diisi',
+                'new_password.min' => 'Password baru minimal 6 karakter (huruf/angka)',
+                'password_confirmation.required' => 'Konfirmasi password harus diisi',
+                'password_confirmation.same' => 'Password baru dan konfirmasi password harus sama'
             ]);
 
             if ($validate->fails()) {
